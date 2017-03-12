@@ -44,7 +44,7 @@ namespace Cs_Evaluator
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/App/Error");
             }
 
             app.UseStaticFiles();
@@ -53,7 +53,7 @@ namespace Cs_Evaluator
             {
                 routes.MapRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    template: "{controller=App}/{action=Index}/{id?}");
             });
         }
     }

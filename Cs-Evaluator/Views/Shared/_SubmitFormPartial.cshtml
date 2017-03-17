@@ -3,38 +3,35 @@
 *@
 
 
-@{ 
+@{
     @model Cs_Evaluator.ViewModels.HomeworkViewModel
 }
 
 @section scripts {
-    <script scr="~lib/jquery/jquery-validation/dist/jquery.validate.min.js"></script>
-    <script scr="~lib/jquery/jquery-validation-unobstrusive/jquery.validate.unosbstrusive.min.js"></script>
+<script scr="~lib/jquery/jquery-validation/dist/jquery.validate.min.js"></script>
+<script scr="~lib/jquery/jquery-validation-unobstrusive/jquery.validate.unosbstrusive.min.js"></script>
 }
 
 <hr />
 
 <h3> Submit homework </h3>
 
-<form asp-action="Index"
-      asp-controller="App"
-      method="post"
-      enctype="multipart/form-data">
+<form asp-action="Index" asp-controller="App" method="post" enctype="multipart/form-data" class="form-group">
 
     <span asp-validation-summary="ModelOnly" style="color:darkred"></span>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Surname)
-        <br />
-        @Html.EditorFor(model => model.Surname)
+        <label asp-for="Surname" class="control-label"></label>
 
-        <span asp-validation-for="Surname" style="color:darkred"></span>
+        <input asp-for="Surname" class="form-control" />
+
+        <span asp-validation-for="Surname" class="text-muted"></span>
     </div>
 
     <div class="form-group">
-        @Html.LabelFor(model => model.Forename)
-        <br />
-        @Html.EditorFor(model => model.Forename)
+        <label asp-for="Forename" class="control-label"></label>
+
+        <input asp-for="Forename" class="form-control" />
 
         <span asp-validation-for="Forename" style="color:darkred"></span>
     </div>
@@ -48,17 +45,24 @@
         </div>
     *@
 
+    @*
+        <div class="form-group">
+            <label asp-for="CsProject" class="control-label"></label>
 
-    <div class="form-group">
-        @Html.LabelFor(model => model.CsProject)
+            <input asp-for="CsProject" class="form-control"/>
 
-        @Html.EditorFor(model => model.CsProject)
-
-        <span asp-validation-for="CsProject" style="color:darkred"></span>
+            <span asp-validation-for="CsProject" class="text-muted"></span>
+        </div>
+    *@
+    <div>
+        <label asp-for="CsProject" class="btn btn-default btn-file">
+            Browse <input type="file" style="display: none;">
+        </label>
     </div>
 
+    <br />
 
-    <div>
-        <input type="submit" value="Submit" />
+    <div class="form-group">
+        <input type="submit" value="Submit" class="form-control btn-success" />
     </div>
 </form>

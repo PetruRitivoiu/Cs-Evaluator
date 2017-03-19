@@ -20,6 +20,7 @@ namespace CsEvaluator
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile("config.json") //?
                 .AddEnvironmentVariables();
             Configuration = builder.Build();
         }
@@ -32,13 +33,15 @@ namespace CsEvaluator
             // Add framework services.
             services.AddDbContext<CsEvaluatorContext>();
 
-            //services.AddTransient<DbInitializer>();
+            services.AddSingleton(Configuration);
+
+            services.AddTransient<DbInitializer>();
 
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory/*, DbInitializer dbInit*/)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DbInitializer dbInit)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();

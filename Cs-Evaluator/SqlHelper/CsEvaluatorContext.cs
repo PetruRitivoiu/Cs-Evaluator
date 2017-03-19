@@ -13,13 +13,13 @@ namespace CsEvaluator.SqlHelper {
     {
         private IConfigurationRoot _config;
 
-        /*
+        
         public CsEvaluatorContext(IConfigurationRoot config, DbContextOptions options)
             : base(options)
         {
             _config = config;
         }
-        */
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

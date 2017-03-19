@@ -9,23 +9,31 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Configuration;
+using CsEvaluator.SqlHelper;
 
 namespace Cs_Evaluator.Controllers
 {
     public class AppController : Controller
     {
-        private IHostingEnvironment hostingEnv;
+        private IHostingEnvironment _hostingEnv;
+        private IConfigurationRoot _config;
+        private CsEvaluatorContext _context;
 
-        public AppController(IHostingEnvironment env)
+        public AppController(IHostingEnvironment env, IConfigurationRoot config, CsEvaluatorContext context)
         {
-            this.hostingEnv = env;
+            _hostingEnv = env;
+            _config = config;
+            _context = context;
         }
 
         public IActionResult Index()
         {
             ViewData["Message"] = "CsEvaluator: Pagina principala";
-            return View();
 
+            //var data = _context.Students.ToList();
+            //return View(data);
+            return View();
         }
 
         [HttpPost]
@@ -39,7 +47,7 @@ namespace Cs_Evaluator.Controllers
                     .Parse(model.CsProject.ContentDisposition)
                     .FileName
                     .Trim('"');
-                filename = hostingEnv.WebRootPath + $@"\uploads\{filename}";
+                filename = _hostingEnv.WebRootPath + $@"\uploads\{filename}";
                 size += model.CsProject.Length;
                 using (FileStream fs = System.IO.File.Create(filename))
                 {
@@ -51,6 +59,7 @@ namespace Cs_Evaluator.Controllers
 
             catch (Exception ex)
             {
+                //do something
             }
 
             return View();

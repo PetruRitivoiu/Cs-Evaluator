@@ -1,0 +1,5 @@
+﻿{
+  "ConnectionStrings": {
+    "CsEvaluator" : "Server=(localdb)\\MSSQLLocalDb;Database=CsEvaluatorDatabase;Trusted_Connection=true;MultipleActiveResultSets=true"
+  }
+}

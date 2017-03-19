@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using CsEvaluator.Entities;
+using CsEvaluator.SqlHelper;
 
-namespace Cs_Evaluator
+namespace CsEvaluator
 {
     public class Startup
     {
@@ -28,11 +30,15 @@ namespace Cs_Evaluator
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddDbContext<CsEvaluatorContext>();
+
+            //services.AddTransient<DbInitializer>();
+
             services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory/*, DbInitializer dbInit*/)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -55,6 +61,8 @@ namespace Cs_Evaluator
                     name: "default",
                     template: "{controller=App}/{action=Index}/{id?}");
             });
+
+            //dbInit.Initialize().Wait();
         }
     }
 }

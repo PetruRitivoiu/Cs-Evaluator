@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Cs_Evaluator.ViewModels;
+using CsEvaluator.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +11,10 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using CsEvaluator.SqlHelper;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using EFLogging;
 
 namespace Cs_Evaluator.Controllers
 {
@@ -30,9 +34,6 @@ namespace Cs_Evaluator.Controllers
         public IActionResult Index()
         {
             ViewData["Message"] = "CsEvaluator: Pagina principala";
-
-            //var data = _context.Students.ToList();
-            //return View(data);
             return View();
         }
 
@@ -63,6 +64,14 @@ namespace Cs_Evaluator.Controllers
             }
 
             return View();
+        }
+
+        public IActionResult Subjects()
+        {
+            var data = _context.Subjects.ToList();
+            var model = new SubjectsViewModel();
+            model.Subjects = data;
+            return View(model);
         }
 
         public IActionResult ATP()

@@ -36,7 +36,7 @@ namespace CsEvaluator.SqlHelper {
         {
             base.OnConfiguring(optionsBuilder);
 
-            optionsBuilder.UseSqlServer(/*_config["ConnectionStrings:CsEvaluator"]*/ "Server=(localdb)\\MSSQLLocalDb;Database=CsEvaluatorDatabase;Trusted_Connection=true;MultipleActiveResultSets=true");
+            optionsBuilder.UseSqlServer(_config["ConnectionStrings:CsEvaluator"]);
         }
 
         public DbSet<HomeworkEntity> Homeworks { get; set; }

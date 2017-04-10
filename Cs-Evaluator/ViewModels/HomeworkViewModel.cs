@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Http;
 
-namespace Cs_Evaluator.ViewModels
+namespace CsEvaluator.ViewModels
 {
     public class HomeworkViewModel
     {
@@ -15,9 +15,6 @@ namespace Cs_Evaluator.ViewModels
 
         [Required]
         public string Forename { get; set; }
-
-        [Required]
-        public SubjectViewModel Subject { get; set; }
 
         [Required]
         [Display(Name = "Source Code")]

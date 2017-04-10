@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using CsEvaluator.Entities;
 using CsEvaluator.SqlHelper;
+using EFLogging;
 
 namespace CsEvaluator
 {
@@ -43,6 +44,8 @@ namespace CsEvaluator
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, DbInitializer dbInit)
         {
+            loggerFactory.AddProvider(new MyLoggerProvider());
+
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -65,7 +68,7 @@ namespace CsEvaluator
                     template: "{controller=App}/{action=Index}/{id?}");
             });
 
-            //dbInit.Initialize().Wait();
+            dbInit.Initialize().Wait();
         }
     }
 }

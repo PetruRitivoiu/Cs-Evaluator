@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using EFLogging;
+using EvaluatorEngine;
 
 namespace Cs_Evaluator.Controllers
 {
@@ -29,6 +30,8 @@ namespace Cs_Evaluator.Controllers
             _hostingEnv = env;
             _config = config;
             _context = context;
+            BPC bpc = new BPC();
+            string str = bpc.Evaluate(" \"C:\\Users\\thinkpad-e560\\Documents\\Visual Studio 2017\\Projects\\cs-evaluator\\Cs-Evaluator\\wwwroot\\uploads\\homework_test.cs\", hello world!");
         }
 
         public IActionResult Index()

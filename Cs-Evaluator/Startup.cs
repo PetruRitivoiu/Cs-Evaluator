@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using CsEvaluator.Entities;
 using CsEvaluator.SqlHelper;
 using EFLogging;
+using CsEvaluator.RepositoryPattern;
 
 namespace CsEvaluator
 {
@@ -33,6 +34,8 @@ namespace CsEvaluator
         {
             // Add framework services.
             services.AddDbContext<CsEvaluatorContext>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton(Configuration);
 

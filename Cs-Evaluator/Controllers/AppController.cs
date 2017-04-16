@@ -16,6 +16,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using EFLogging;
 using EvaluatorEngine;
+using CsEvaluator.RepositoryPattern;
 
 namespace Cs_Evaluator.Controllers
 {
@@ -24,12 +25,16 @@ namespace Cs_Evaluator.Controllers
         private IHostingEnvironment _hostingEnv;
         private IConfigurationRoot _config;
         private CsEvaluatorContext _context;
+        private IUnitOfWork _unitOfWork;
 
-        public AppController(IHostingEnvironment env, IConfigurationRoot config, CsEvaluatorContext context)
+        public AppController(IHostingEnvironment env, IConfigurationRoot config, IUnitOfWork uof , CsEvaluatorContext context)
         {
+            _unitOfWork = uof;
             _hostingEnv = env;
             _config = config;
             _context = context;
+
+            //TBD
             BPC bpc = new BPC();
             string str = bpc.Evaluate(" \"C:\\Users\\thinkpad-e560\\Documents\\Visual Studio 2017\\Projects\\cs-evaluator\\Cs-Evaluator\\wwwroot\\uploads\\homework_test.cs\", hello world!");
         }

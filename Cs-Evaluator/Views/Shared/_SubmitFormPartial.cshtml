@@ -16,7 +16,7 @@
 
 <h3> Submit homework </h3>
 
-<form asp-action="Index" asp-controller="App" method="post" enctype="multipart/form-data" class="form-group">
+<form asp-action="BPC" asp-controller="App" method="post" enctype="multipart/form-data" class="form-horizontal">
 
     <span asp-validation-summary="ModelOnly" style="color:darkred"></span>
 
@@ -46,23 +46,24 @@
     *@
 
     @*
-        <div class="form-group">
-            <label asp-for="CsProject" class="control-label"></label>
+    <div class="form-group">
+        <label asp-for="CsProject" class="control-label"></label>
 
-            <input asp-for="CsProject" class="form-control"/>
+        <input asp-for="CsProject" class="form-control"/>
 
-            <span asp-validation-for="CsProject" class="text-muted"></span>
-        </div>
+        <span asp-validation-for="CsProject" class="text-muted"></span>
+    </div>
     *@
-    <div>
-        <label asp-for="CsProject" class="btn btn-default btn-file">
-            Browse <input type="file" style="display: none;">
-        </label>
+
+
+    <div class="form-group">
+        <label for="exampleInputFile">File input</label>
+        <input type="file" asp-for="CsProject" class="form-control-file">
     </div>
 
-    <br />
 
     <div class="form-group">
         <input type="submit" value="Submit" class="form-control btn-success" />
     </div>
+
 </form>

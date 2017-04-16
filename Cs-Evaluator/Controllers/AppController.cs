@@ -41,7 +41,7 @@ namespace Cs_Evaluator.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(HomeworkViewModel model, IList<IFormFile> files)
+        public IActionResult BPC(HomeworkViewModel model, IList<IFormFile> files)
         {
 
             long size = 0;

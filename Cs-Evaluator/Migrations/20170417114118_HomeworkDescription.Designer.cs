@@ -8,9 +8,10 @@ using CsEvaluator.SqlHelper;
 namespace CsEvaluator.Migrations
 {
     [DbContext(typeof(CsEvaluatorContext))]
-    partial class CsEvaluatorContextModelSnapshot : ModelSnapshot
+    [Migration("20170417114118_HomeworkDescription")]
+    partial class HomeworkDescription
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -21,17 +22,11 @@ namespace CsEvaluator.Migrations
                     b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<int?>("SubjectID");
-
                     b.Property<string>("fullDescription");
-
-                    b.Property<string>("fullname");
 
                     b.Property<string>("shortDescription");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("SubjectID");
 
                     b.ToTable("HomeworkDescriptions");
                 });
@@ -108,13 +103,6 @@ namespace CsEvaluator.Migrations
                     b.ToTable("Subjects");
                 });
 
-            modelBuilder.Entity("CsEvaluator.Entities.HomeworkDescriptionEntity", b =>
-                {
-                    b.HasOne("CsEvaluator.Entities.SubjectEntity", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectID");
-                });
-
             modelBuilder.Entity("CsEvaluator.Entities.HomeworkEntity", b =>
                 {
                     b.HasOne("CsEvaluator.Entities.HomeworkDescriptionEntity", "HomeworkDescription")
@@ -122,7 +110,7 @@ namespace CsEvaluator.Migrations
                         .HasForeignKey("HomeworkDescriptionID");
 
                     b.HasOne("CsEvaluator.Entities.SubjectEntity", "Subject")
-                        .WithMany()
+                        .WithMany("Homeworks")
                         .HasForeignKey("SubjectID");
                 });
 

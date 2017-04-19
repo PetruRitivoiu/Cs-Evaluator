@@ -36,6 +36,8 @@
     <ProjectReference Include="..\EvaluatorEngine\EvaluatorEngine.csproj" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Controllers\Api\" />
+    <Folder Include="Controllers\Web\" />
     <Folder Include="exes\" />
   </ItemGroup>
 

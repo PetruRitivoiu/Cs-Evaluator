@@ -11,6 +11,5 @@ namespace CsEvaluator.Entities
         public string Name { get; set; }
 
         public ICollection<StudentSubjectRelationship> StudentSubjectRelationship { get; set; }
-        public ICollection<HomeworkEntity> Homeworks { get; set; }
     }
 }

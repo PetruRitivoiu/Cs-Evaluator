@@ -20,49 +20,32 @@
 
     <span asp-validation-summary="ModelOnly" style="color:darkred"></span>
 
-    <div class="form-group">
-        <label asp-for="Surname" class="control-label"></label>
+    <div class="form-group-sm">
+        <select class="form-control" asp-for="StudentID"
+                asp-items="@(new SelectList(Model.Students, "ID", "fullname"))">
+                <option>Please select an option</option>
+        </select>
 
-        <input asp-for="Surname" class="form-control" />
-
-        <span asp-validation-for="Surname" class="text-muted"></span>
+        <span asp-validation-for="StudentID" class="text-danger"></span>
     </div>
 
-    <div class="form-group">
-        <label asp-for="Forename" class="control-label"></label>
+    <div class="form-group-sm">
+        <select class="form-control" asp-for="HomeworkDescriptionID" 
+                asp-items="@(new SelectList(Model.HomeworkDescriptions, "ID", "fullname"))">
+                <option>Please select an option</option>
+        </select>
 
-        <input asp-for="Forename" class="form-control" />
-
-        <span asp-validation-for="Forename" style="color:darkred"></span>
+        <span asp-validation-for="HomeworkDescriptionID" class="text-danger"></span>
     </div>
 
-    @*
-        <div>
-            <label asp-for="Subject"> Subject  </label>
-            <br />
-            <input asp-for="Subject" />
 
-        </div>
-    *@
-
-    @*
-    <div class="form-group">
-        <label asp-for="CsProject" class="control-label"></label>
-
-        <input asp-for="CsProject" class="form-control"/>
-
-        <span asp-validation-for="CsProject" class="text-muted"></span>
-    </div>
-    *@
-
-
-    <div class="form-group">
+    <div class="form-group-sm">
         <label for="exampleInputFile">File input</label>
         <input type="file" asp-for="CsProject" class="form-control-file">
     </div>
 
 
-    <div class="form-group">
+    <div class="form-group-sm">
         <input type="submit" value="Submit" class="form-control btn-success" />
     </div>
 

@@ -38,10 +38,18 @@ namespace CsEvaluator.SqlHelper
                 new SubjectEntity{Name="ATP"}
             };
 
+            var homeworkDescriptions = new HomeworkDescriptionEntity[]
+            {
+                new HomeworkDescriptionEntity{Subject=subjects[0], fullname="Tema 1", shortDescription="Produs vectorial a 2 vectori",
+                    fullDescription = "Sa se calculeze produsul vectorial a doi vectori de lungime 20",},
+                new HomeworkDescriptionEntity{Subject=subjects[1], fullname="Tema 2", shortDescription="Inmultire doua matrici",
+                    fullDescription = "Sa se inmulteasca 2 matrici de marime 3*3 si sa se afiseze rezultatul la consola"}
+            };
+
             var homeworks = new HomeworkEntity[]
             {
-                new HomeworkEntity{FullPath="C:\\Users\\thinkpad-e560\\Documents\\Visual Studio 2017\\Projects\\cs-evaluator\\Cs-Evaluator\\wwwroot\\uploads\\homework_1", Subject=subjects[0]},
-                new HomeworkEntity{FullPath="C:\\Users\\thinkpad-e560\\Documents\\Visual Studio 2017\\Projects\\cs-evaluator\\Cs-Evaluator\\wwwroot\\uploads\\homework_2", Subject=subjects[1]}
+                new HomeworkEntity{FullPath="MOCK", Subject=subjects[0], HomeworkDescription = homeworkDescriptions[0]},
+                new HomeworkEntity{FullPath="MOCK", Subject=subjects[1], HomeworkDescription = homeworkDescriptions[1]}
             };
 
             var studentSubjectRelationship = new StudentSubjectRelationship[]
@@ -58,6 +66,7 @@ namespace CsEvaluator.SqlHelper
 
             _context.Students.AddRange(students);
             _context.Subjects.AddRange(subjects);
+            _context.HomeworkDescriptions.AddRange(homeworkDescriptions);
             _context.Homeworks.AddRange(homeworks);
             _context.StudentSubjects.AddRange(studentSubjectRelationship);
             _context.StudentHomeworks.AddRange(studentHomeworkRelationship);

@@ -8,9 +8,10 @@ using CsEvaluator.SqlHelper;
 namespace CsEvaluator.Migrations
 {
     [DbContext(typeof(CsEvaluatorContext))]
-    partial class CsEvaluatorContextModelSnapshot : ModelSnapshot
+    [Migration("20170417133401_HomeworkDescrition3")]
+    partial class HomeworkDescrition3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")
@@ -122,7 +123,7 @@ namespace CsEvaluator.Migrations
                         .HasForeignKey("HomeworkDescriptionID");
 
                     b.HasOne("CsEvaluator.Entities.SubjectEntity", "Subject")
-                        .WithMany()
+                        .WithMany("Homeworks")
                         .HasForeignKey("SubjectID");
                 });
 

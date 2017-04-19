@@ -17,6 +17,8 @@ namespace CsEvaluator.RepositoryPattern
             StudentRepository = new StudentRepository(Context);
             SubjectRepository = new SubjectRepository(Context);
             HomeworkRepository = new HomeworkRepository(Context);
+            HomeworkDescriptionRepository = new HomeworkDescriptionRepository(Context);
+            StudentHomeworkRepository = new StudentHomeworkRepository(Context);
         }
 
         public IStudentRepository StudentRepository { get; private set; }
@@ -24,6 +26,10 @@ namespace CsEvaluator.RepositoryPattern
         public ISubjectRepository SubjectRepository { get; private set; }
 
         public IHomeworkRepository HomeworkRepository { get; private set; }
+
+        public IHomeworkDescriptionRepository HomeworkDescriptionRepository { get; private set; }
+
+        public IStudentHomeworkRepository StudentHomeworkRepository { get; private set; }
 
         public int Complete()
         {

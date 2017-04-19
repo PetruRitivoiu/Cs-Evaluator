@@ -44,5 +44,6 @@ namespace CsEvaluator.SqlHelper {
         public DbSet<StudentEntity> Students { get; set; }
         public DbSet<StudentSubjectRelationship> StudentSubjects { get; set; }
         public DbSet<StudentHomeworkRelationship> StudentHomeworks { get; set; }
+        public DbSet<HomeworkDescriptionEntity> HomeworkDescriptions { get; set; }
     }
 }

@@ -10,6 +10,8 @@ namespace CsEvaluator.RepositoryPattern
         IStudentRepository StudentRepository { get; }
         ISubjectRepository SubjectRepository { get; }
         IHomeworkRepository HomeworkRepository { get; }
+        IHomeworkDescriptionRepository HomeworkDescriptionRepository { get; }
+        IStudentHomeworkRepository StudentHomeworkRepository { get; }
 
         int Complete();
     }

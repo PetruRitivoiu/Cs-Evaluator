@@ -8,9 +8,10 @@ using CsEvaluator.SqlHelper;
 namespace CsEvaluator.Migrations
 {
     [DbContext(typeof(CsEvaluatorContext))]
-    partial class CsEvaluatorContextModelSnapshot : ModelSnapshot
+    [Migration("20170419183108_bug-fix")]
+    partial class bugfix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.1")

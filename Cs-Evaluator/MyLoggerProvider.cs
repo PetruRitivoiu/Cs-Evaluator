@@ -28,11 +28,10 @@ namespace EFLogging
                     File.AppendAllText(@"C:\temp\log.txt", formatter(state, exception));
                     Console.WriteLine(formatter(state, exception));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    
+                    Console.WriteLine(ex.StackTrace);
                 }
-
             }
 
             public IDisposable BeginScope<TState>(TState state)

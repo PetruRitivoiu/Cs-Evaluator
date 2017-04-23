@@ -11,6 +11,7 @@ using CsEvaluator.Entities;
 using CsEvaluator.SqlHelper;
 using EFLogging;
 using CsEvaluator.RepositoryPattern;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace CsEvaluator
 {
@@ -42,6 +43,8 @@ namespace CsEvaluator
             services.AddSingleton(Configuration);
 
             services.AddTransient<DbInitializer>();
+
+            services.AddSingleton<ITempDataProvider, CookieTempDataProvider>();
 
             services.AddMvc();
         }

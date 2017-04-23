@@ -1,0 +1,14 @@
+﻿@{
+    ViewData["Title"] = "Results";
+    @model CsEvaluator.ViewModels.ResultViewModel
+}
+
+<h2>@ViewData["Title"].</h2>
+<h3>@ViewData["Message"]</h3>
+
+<p>Student: @Model.StudentName</p>
+<p>Subject: @Model.SubjectName</p>
+<p>Homework: @Model.HomeworkName</p>
+<p>Homework description: @Model.HomeworkDescription</p>
+<p>Evaluation result: @Model.EvaluationResult</p>
+<p>Raw view for test: @Model.rawViewForTest</p>

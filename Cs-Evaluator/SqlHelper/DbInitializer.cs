@@ -48,8 +48,8 @@ namespace CsEvaluator.SqlHelper
 
             var homeworks = new HomeworkEntity[]
             {
-                new HomeworkEntity{FullPath="MOCK", Subject=subjects[0], HomeworkDescription = homeworkDescriptions[0]},
-                new HomeworkEntity{FullPath="MOCK", Subject=subjects[1], HomeworkDescription = homeworkDescriptions[1]}
+                new HomeworkEntity{FileName="MOCK", Subject=subjects[0], HomeworkDescription = homeworkDescriptions[0]},
+                new HomeworkEntity{FileName="MOCK", Subject=subjects[1], HomeworkDescription = homeworkDescriptions[1]}
             };
 
             var studentSubjectRelationship = new StudentSubjectRelationship[]

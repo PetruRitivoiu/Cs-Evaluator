@@ -6,4 +6,10 @@
 <h2>@ViewData["Title"].</h2>
 <h3>@ViewData["Message"]</h3>
 
-<p>@Model.Subjects.ElementAt(1).Name</p>
+<div style="display:inline-block">
+@foreach (var item in Model.Subjects)
+{
+    <a href="/app/@item.Name" class="list-group-item">@item.Name</a>
+}
+</div>
+

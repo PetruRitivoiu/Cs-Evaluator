@@ -8,13 +8,31 @@
 }
 
 @section scripts {
-<script scr="~lib/jquery/jquery-validation/dist/jquery.validate.min.js"></script>
-<script scr="~lib/jquery/jquery-validation-unobstrusive/jquery.validate.unosbstrusive.min.js"></script>
+    <script scr="~lib/jquery/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script scr="~lib/jquery/jquery-validation-unobstrusive/jquery.validate.unosbstrusive.min.js"></script>
 }
 
 <hr />
 
+<div class="container">
+    @foreach (var hdpm in Model.HomeworkDescriptions)
+    {
+        <div class="form-group-sm">
+            Nume tema:
+            <p>@hdpm.fullname</p>
+            
+            Descriere tema:
+            <p>@hdpm.fullDescription</p>
+            
+            <hr />
+        </div>
+    }
+</div>
+
+
+
 <h3> Submit homework </h3>
+
 
 <form asp-action="BPC" asp-controller="App" method="post" enctype="multipart/form-data" class="form-horizontal">
 
@@ -23,16 +41,16 @@
     <div class="form-group-sm">
         <select class="form-control" asp-for="StudentID"
                 asp-items="@(new SelectList(Model.Students, "ID", "fullname"))">
-                <option>Please select an option</option>
+            <option>Please select an option</option>
         </select>
 
         <span asp-validation-for="StudentID" class="text-danger"></span>
     </div>
 
     <div class="form-group-sm">
-        <select class="form-control" asp-for="HomeworkDescriptionID" 
+        <select class="form-control" asp-for="HomeworkDescriptionID"
                 asp-items="@(new SelectList(Model.HomeworkDescriptions, "ID", "fullname"))">
-                <option>Please select an option</option>
+            <option>Please select an option</option>
         </select>
 
         <span asp-validation-for="HomeworkDescriptionID" class="text-danger"></span>

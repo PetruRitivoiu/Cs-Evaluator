@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using CsEvaluator.SqlHelper;
@@ -16,7 +17,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using EFLogging;
 using EvaluatorEngine;
-using CsEvaluator.RepositoryPattern;
 using CsEvaluator.Entities;
 using CsEvaluator.ModelState;
 
@@ -27,14 +27,12 @@ namespace Cs_Evaluator.Controllers
         private IHostingEnvironment _hostingEnv;
         private IConfigurationRoot _config;
         private CsEvaluatorContext _context;
-        private IUnitOfWork _unitOfWork;
         private ILogger _logger;
 
         //Constructor
 
-        public AppController(IHostingEnvironment env, IConfigurationRoot config, IUnitOfWork uof, ILoggerFactory loggerFactory, CsEvaluatorContext context)
+        public AppController(IHostingEnvironment env, IConfigurationRoot config, ILoggerFactory loggerFactory, CsEvaluatorContext context)
         {
-            _unitOfWork = uof;
             _hostingEnv = env;
             _config = config;
             _context = context;
@@ -46,7 +44,7 @@ namespace Cs_Evaluator.Controllers
         private void wrapStudentsData(HomeworkViewModel model)
         {
             List<StudentPreviewModel> studentsPreview = new List<StudentPreviewModel>();
-            IEnumerable<StudentEntity> students = _unitOfWork.StudentRepository.GetAll();
+            IEnumerable<StudentEntity> students = _context.Students.ToList();
 
             foreach (StudentEntity student in students)
             {
@@ -59,12 +57,12 @@ namespace Cs_Evaluator.Controllers
 
         private void wrapHomeworkDescriptionData(HomeworkViewModel model)
         {
-            List<HomeworkDescriptionPreview> homeworkDescriptionsPreview = new List<HomeworkDescriptionPreview>();
-            IEnumerable<HomeworkDescriptionEntity> homeworkDescriptions = _unitOfWork.HomeworkDescriptionRepository.GetAll();
+            List<HomeworkDescriptionPreviewModel> homeworkDescriptionsPreview = new List<HomeworkDescriptionPreviewModel>();
+            IEnumerable<HomeworkDescriptionEntity> homeworkDescriptions = _context.HomeworkDescriptions.ToList();
 
             foreach (HomeworkDescriptionEntity hde in homeworkDescriptions)
             {
-                homeworkDescriptionsPreview.Add(new HomeworkDescriptionPreview() { ID = hde.ID, fullname = hde.fullname });
+                homeworkDescriptionsPreview.Add(new HomeworkDescriptionPreviewModel() { ID = hde.ID, fullname = hde.fullname, fullDescription = hde.fullDescription });
             }
 
             model.HomeworkDescriptions = homeworkDescriptionsPreview;
@@ -80,7 +78,7 @@ namespace Cs_Evaluator.Controllers
                     .Parse(model.CsProject.ContentDisposition)
                     .FileName
                     .Trim('"');
-                filename = _hostingEnv.WebRootPath + $@"\uploads\{filename}";
+                filename = $@"C:\Users\thinkpad-e560\\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\uploads\{filename}";
                 size += model.CsProject.Length;
                 using (FileStream fs = System.IO.File.Create(filename))
                 {
@@ -134,23 +132,23 @@ namespace Cs_Evaluator.Controllers
                 HomeworkEntity he = new HomeworkEntity()
                 {
                     FileName = model.CsProject.FileName,
-                    Subject = _unitOfWork.SubjectRepository.Find(t => t.Name.Equals("BPC")).FirstOrDefault(),
-                    HomeworkDescription = _unitOfWork.HomeworkDescriptionRepository.Find(t => t.ID == model.HomeworkDescriptionID).FirstOrDefault(),
+                    Subject = _context.Subjects.FirstOrDefault(t => t.Name.Equals("BPC")),
+                    HomeworkDescription = _context.HomeworkDescriptions.FirstOrDefault(t => t.ID == model.HomeworkDescriptionID),
                 };
 
                 StudentHomeworkRelationship shr = new StudentHomeworkRelationship()
                 {
                     Homework = he,
-                    Student = _unitOfWork.StudentRepository.Find(t => t.ID == model.StudentID).FirstOrDefault()
+                    Student = _context.Students.FirstOrDefault(t => t.ID == model.StudentID)
                 };
 
                 //compile and execute
                 //save data in database
 
-                _unitOfWork.HomeworkRepository.Add(he);
-                _unitOfWork.StudentHomeworkRepository.Add(shr);
+                _context.Homeworks.Add(he);
+                _context.StudentHomeworks.Add(shr);
 
-                _unitOfWork.Complete();
+                _context.SaveChanges();
 
                 
                 return RedirectToAction("Results", new { homeworkID = he.ID, StudentID = model.StudentID});
@@ -176,25 +174,27 @@ namespace Cs_Evaluator.Controllers
 
         public IActionResult Results(int homeworkID, int studentID)
         {
-            ViewData["Message"] = "Rezultatele evaluarilor de pana in prezent ** FIX REPOSITORY PATTERN ISSUE **";
+            ViewData["Message"] = "Rezultatele evaluarilor de pana in prezent";
 
             ResultViewModel model = new ResultViewModel();
 
-            HomeworkEntity he = _unitOfWork.HomeworkRepository.Get(homeworkID);
-            StudentHomeworkRelationship shr = _unitOfWork.StudentHomeworkRepository.Find(t => t.HomeworkID == homeworkID && t.StudentID == studentID).FirstOrDefault();
-            StudentEntity se = _unitOfWork.StudentRepository.Get(studentID);
+            HomeworkEntity he = _context.Homeworks.Include(t => t.StudentHomeworkRelationship)
+                .Include(t => t.Subject)
+                .Include(t => t.HomeworkDescription)
+                .FirstOrDefault(t => t.ID == homeworkID);
+            StudentHomeworkRelationship shr = _context.StudentHomeworks.FirstOrDefault(t => t.HomeworkID == homeworkID && t.StudentID == studentID);
+            StudentEntity se = _context.Students.FirstOrDefault(t => t.ID == studentID);
 
             model.StudentName = se.Forename + " " + se.Surname;
-            model.SubjectName = "fix this";
-            model.HomeworkName = "fix this";
-            model.HomeworkDescription = "fix this";
+            model.SubjectName = he.Subject.Name;
+            model.HomeworkName = he.HomeworkDescription.fullname;
+            model.HomeworkDescription = he.HomeworkDescription.fullDescription;
             model.EvaluationResult = he.EvaluationResult;
 
-            //TBD
             BPC bpc = new BPC();
-            //string str = bpc.Evaluate(" \"C:\\Users\\thinkpad-e560\\Documents\\Visual Studio 2017\\Projects\\cs-evaluator\\Cs-Evaluator\\wwwroot\\uploads\\homework_test.cs\", hello world!");
-            string str = bpc.Evaluate(" \"C:\\Users\\thinkpad-e560\\Documents\\Visual Studio 2017\\Projects\\cs-evaluator\\Cs-Evaluator\\wwwroot\\uploads\\" + he.FileName + "\"" + " , hello world!");
-
+            var pathToFile = $@"C:\Users\thinkpad-e560\\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\uploads\{he.FileName}\";
+            var fileArg = $@"C:\Users\thinkpad-e560\\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\uploads\validation_files\{he.HomeworkDescription.ID}\initial.txt";
+            string str = bpc.Evaluate("\"" + pathToFile + "\" \"" + fileArg + "\"");
             model.rawViewForTest = str;
 
             return View(model);

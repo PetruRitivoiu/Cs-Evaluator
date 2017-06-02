@@ -14,6 +14,9 @@ namespace CsEvaluator.Entities
         public string shortDescription { get; set; }
         public string fullDescription { get; set; }
 
+        public string initialFile { get; set; }
+        public string expectedFile { get; set; }
+
         public SubjectEntity Subject { get; set; }
     }
 }

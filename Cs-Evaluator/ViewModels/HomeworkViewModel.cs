@@ -24,7 +24,7 @@ namespace CsEvaluator.ViewModels
 
         public IEnumerable<StudentPreviewModel> Students { get; set; }
 
-        public IEnumerable<HomeworkDescriptionPreview> HomeworkDescriptions { get; set; }
+        public IEnumerable<HomeworkDescriptionPreviewModel> HomeworkDescriptions { get; set; }
 
     }
 }

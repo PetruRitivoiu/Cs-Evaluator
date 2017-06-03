@@ -15,8 +15,8 @@ namespace CsEvaluator.ViewModels
 
         public string StudentName { get; set; }
 
-        public int EvaluationResult { get; set; }
+        public double EvaluationResult { get; set; }
 
-        public string rawViewForTest { get; set; }
+        public string Errors { get; set; }
     }
 }

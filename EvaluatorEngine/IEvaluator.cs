@@ -6,6 +6,6 @@ namespace EvaluatorEngine
 {
     interface IEvaluator
     {
-        string Evaluate(string arg);
+        Evaluation Evaluate(string[] args);
     }
 }

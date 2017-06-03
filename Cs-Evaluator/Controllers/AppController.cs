@@ -192,10 +192,18 @@ namespace Cs_Evaluator.Controllers
             model.EvaluationResult = he.EvaluationResult;
 
             BPC bpc = new BPC();
-            var pathToFile = $@"C:\Users\thinkpad-e560\\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\uploads\{he.FileName}\";
-            var fileArg = $@"C:\Users\thinkpad-e560\\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\uploads\validation_files\{he.HomeworkDescription.ID}\initial.txt";
-            string str = bpc.Evaluate("\"" + pathToFile + "\" \"" + fileArg + "\"");
-            model.rawViewForTest = str;
+
+            var pathToFile = $@"uploads\{he.FileName}"; // -> Arg 1
+            var exeFile = he.FileName.Substring(0, he.FileName.LastIndexOf('.')) + "_"  + "_" + he.ID + ".exe"; // -> Arg 2
+            var validationFile = $@"uploads\validation_files\{he.HomeworkDescription.ID}\initial.txt"; // -> Arg 3
+            var expectedFile = $@"uploads\validation_files\{he.HomeworkDescription.ID}\expected.txt"; // -> Arg 4
+
+
+            string[] args = { pathToFile, exeFile, validationFile, expectedFile};
+
+            Evaluation eval = bpc.Evaluate(args);
+            model.Errors = String.IsNullOrEmpty(eval.StdError) ? "None" : eval.StdError;
+            model.EvaluationResult = eval.EvaluationResult;
 
             return View(model);
         }

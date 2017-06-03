@@ -8,9 +8,9 @@ namespace CsEvaluator.Entities
     public class StudentSubjectRelationship
     {
         public int StudentID { get; set; }
-        public StudentEntity Student { get; set; }
+        public virtual StudentEntity Student { get; set; }
 
         public int SubjectID { get; set; }
-        public SubjectEntity Subject { get; set; }
+        public virtual SubjectEntity Subject { get; set; }
     }
 }

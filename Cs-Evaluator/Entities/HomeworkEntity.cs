@@ -13,9 +13,7 @@ namespace CsEvaluator.Entities
         public bool WasEvaluated { get; set; } = false;
         public int EvaluationResult { get; set; } = -1;
 
-        public SubjectEntity Subject { get; set; }
-        public ICollection<StudentHomeworkRelationship> StudentHomeworkRelationship { get; set; }
-
-        public HomeworkDescriptionEntity HomeworkDescription { get; set; }
+        public virtual HomeworkDescriptionEntity HomeworkDescription { get; set; }
+        public virtual StudentEntity Student { get; set; }
     }
 }

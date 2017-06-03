@@ -7,6 +7,11 @@ namespace CsEvaluator.Entities
 {
     public class HomeworkDescriptionEntity
     {
+        public HomeworkDescriptionEntity()
+        {
+            Homeworks = new HashSet<HomeworkEntity>();
+        }
+
         public int ID { get; set; }
 
         public string fullname { get; set; }
@@ -14,9 +19,10 @@ namespace CsEvaluator.Entities
         public string shortDescription { get; set; }
         public string fullDescription { get; set; }
 
-        public string initialFile { get; set; }
-        public string expectedFile { get; set; }
+        public string initialFile { get; set; } = "initial.txt";
+        public string expectedFile { get; set; } = "expected.txt";
 
-        public SubjectEntity Subject { get; set; }
+        public virtual SubjectEntity Subject { get; set; }
+        public virtual ICollection<HomeworkEntity> Homeworks { get; set; }
     }
 }

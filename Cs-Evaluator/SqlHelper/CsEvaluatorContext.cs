@@ -25,9 +25,6 @@ namespace CsEvaluator.SqlHelper {
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<StudentHomeworkRelationship>()
-                .HasKey(shr => new { shr.StudentID, shr.HomeworkID });
-
             modelBuilder.Entity<StudentSubjectRelationship>()
                 .HasKey(shr => new { shr.StudentID, shr.SubjectID });
         }
@@ -43,7 +40,6 @@ namespace CsEvaluator.SqlHelper {
         public DbSet<SubjectEntity> Subjects { get; set; }
         public DbSet<StudentEntity> Students { get; set; }
         public DbSet<StudentSubjectRelationship> StudentSubjects { get; set; }
-        public DbSet<StudentHomeworkRelationship> StudentHomeworks { get; set; }
         public DbSet<HomeworkDescriptionEntity> HomeworkDescriptions { get; set; }
     }
 }

@@ -132,21 +132,17 @@ namespace Cs_Evaluator.Controllers
                 HomeworkEntity he = new HomeworkEntity()
                 {
                     FileName = model.CsProject.FileName,
-                    Subject = _context.Subjects.FirstOrDefault(t => t.Name.Equals("BPC")),
                     HomeworkDescription = _context.HomeworkDescriptions.FirstOrDefault(t => t.ID == model.HomeworkDescriptionID),
-                };
-
-                StudentHomeworkRelationship shr = new StudentHomeworkRelationship()
-                {
-                    Homework = he,
                     Student = _context.Students.FirstOrDefault(t => t.ID == model.StudentID)
                 };
 
+                StudentEntity se = _context.Students.FirstOrDefault(t => t.ID == model.StudentID);
+                se.Homeworks.Add(he);
+                
                 //compile and execute
                 //save data in database
 
                 _context.Homeworks.Add(he);
-                _context.StudentHomeworks.Add(shr);
 
                 _context.SaveChanges();
 
@@ -178,15 +174,14 @@ namespace Cs_Evaluator.Controllers
 
             ResultViewModel model = new ResultViewModel();
 
-            HomeworkEntity he = _context.Homeworks.Include(t => t.StudentHomeworkRelationship)
-                .Include(t => t.Subject)
+            HomeworkEntity he = _context.Homeworks.Include(t => t.Student)
                 .Include(t => t.HomeworkDescription)
+                .ThenInclude(t => t.Subject)
                 .FirstOrDefault(t => t.ID == homeworkID);
-            StudentHomeworkRelationship shr = _context.StudentHomeworks.FirstOrDefault(t => t.HomeworkID == homeworkID && t.StudentID == studentID);
-            StudentEntity se = _context.Students.FirstOrDefault(t => t.ID == studentID);
+            StudentEntity se = he.Student;
 
             model.StudentName = se.Forename + " " + se.Surname;
-            model.SubjectName = he.Subject.Name;
+            model.SubjectName = he.HomeworkDescription.Subject.Name;
             model.HomeworkName = he.HomeworkDescription.fullname;
             model.HomeworkDescription = he.HomeworkDescription.fullDescription;
             model.EvaluationResult = he.EvaluationResult;
@@ -195,8 +190,8 @@ namespace Cs_Evaluator.Controllers
 
             var pathToFile = $@"uploads\{he.FileName}"; // -> Arg 1
             var exeFile = he.FileName.Substring(0, he.FileName.LastIndexOf('.')) + "_"  + "_" + he.ID + ".exe"; // -> Arg 2
-            var validationFile = $@"uploads\validation_files\{he.HomeworkDescription.ID}\initial.txt"; // -> Arg 3
-            var expectedFile = $@"uploads\validation_files\{he.HomeworkDescription.ID}\expected.txt"; // -> Arg 4
+            var validationFile = $@"uploads\validation_files\{he.HomeworkDescription.ID}\{he.HomeworkDescription.initialFile}"; // -> Arg 3
+            var expectedFile = $@"uploads\validation_files\{he.HomeworkDescription.ID}\{he.HomeworkDescription.expectedFile}"; // -> Arg 4
 
 
             string[] args = { pathToFile, exeFile, validationFile, expectedFile};

@@ -21,6 +21,7 @@ namespace EvaluatorEngine
             //Arg 4 -> expectedFile
 
             Process myProcess = Process.Start(getProcessStartInfo(args));
+
             myProcess.Start();
 
             string result = myProcess.StandardOutput.ReadToEnd();
@@ -66,6 +67,7 @@ namespace EvaluatorEngine
             if (result.Length != expected.Length)
             {
                 stdErr = "output and expected string arrays don't have the same number of lines";
+                evaluationResult = -1;
             }
             else
             {
@@ -78,7 +80,9 @@ namespace EvaluatorEngine
                 }
             }
 
+            if (evaluationResult != -1) {
             evaluationResult = evaluationResult / expected.Length * 10;
+            }
 
             return new Evaluation(evaluationResult, stdErr);
         }
@@ -88,8 +92,8 @@ namespace EvaluatorEngine
             ProcessStartInfo psi = new ProcessStartInfo();
 
             psi.WorkingDirectory = WORKING_DIRECTORY;
-
             psi.FileName = "\"" + COMPILE_AND_EXECUTE + "\"";
+
             psi.Arguments = args[0] + " " + args[1] + " " + args[2];
             psi.UseShellExecute = false;
 

@@ -11,16 +11,39 @@ namespace EvaluatorEngine
 
         private static string COMPILE_AND_EXECUTE = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\CompileAndExecute.bat";
         private static string WORKING_DIRECTORY = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine";
+        private static string AVIRA_COMMAND_LINE_SCANNER = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\ScanFile.bat";
+
+        public void CompileAndScanFile(string[] args)
+        {
+            //relative paths
+            //Arg[0] -> pathToFile (CS file)
+            //Arg[1] -> exeFile  (CS file after compile and build)
+
+            Process myProcess = Process.Start(getProcessStartInfo(AVIRA_COMMAND_LINE_SCANNER, args));
+
+            myProcess.Start();
+
+            string result = myProcess.StandardOutput.ReadToEnd();
+
+            string stderror = myProcess.StandardError.ReadToEnd();
+
+            myProcess.WaitForExit();
+        }
 
         public Evaluation Evaluate(string[] args)
         {
             //relative paths
-            //Arg 1 -> pathToFile (CS file)
-            //Arg 2 -> exeFile  (CS file after compile and build)
-            //Arg 3 -> validationFile
-            //Arg 4 -> expectedFile
+            //Arg[0] -> pathToFile (CS file)
+            //Arg[1] -> exeFile  (CS file after compile and build)
+            //Arg[2] -> validationFile
+            //Arg[3] -> expectedFile
 
-            Process myProcess = Process.Start(getProcessStartInfo(args));
+            if (!File.Exists(WORKING_DIRECTORY + @"\exes\" + args[1]))
+            {
+                return new Evaluation(-1, "exe file not found. most probably the exe file contained malicious code and was removed");
+            }
+
+            Process myProcess = Process.Start(getProcessStartInfo(COMPILE_AND_EXECUTE ,args));
 
             myProcess.Start();
 
@@ -87,14 +110,27 @@ namespace EvaluatorEngine
             return new Evaluation(evaluationResult, stdErr);
         }
 
-        private ProcessStartInfo getProcessStartInfo(string[] args)
+        private ProcessStartInfo getProcessStartInfo(string filename, string[] args)
         {
             ProcessStartInfo psi = new ProcessStartInfo();
 
             psi.WorkingDirectory = WORKING_DIRECTORY;
-            psi.FileName = "\"" + COMPILE_AND_EXECUTE + "\"";
+            psi.FileName = "\"" + filename + "\"";
 
-            psi.Arguments = args[0] + " " + args[1] + " " + args[2];
+
+            for(int i = 0; i < args.Length; i++)
+            {
+                if (i < args.Length - 1)
+                {
+                    psi.Arguments += args[i] + " ";
+                }
+                else
+                {
+                    psi.Arguments += args[i];
+                }
+            }
+
+            
             psi.UseShellExecute = false;
 
             psi.RedirectStandardOutput = true;
@@ -113,5 +149,6 @@ namespace EvaluatorEngine
 
             return arrResult;
         }
+
     }
 }

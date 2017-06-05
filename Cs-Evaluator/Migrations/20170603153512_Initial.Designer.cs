@@ -8,8 +8,8 @@ using CsEvaluator.SqlHelper;
 namespace CsEvaluator.Migrations
 {
     [DbContext(typeof(CsEvaluatorContext))]
-    [Migration("20170524184556_fisiere_validare")]
-    partial class fisiere_validare
+    [Migration("20170603153512_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -52,7 +52,7 @@ namespace CsEvaluator.Migrations
 
                     b.Property<int?>("HomeworkDescriptionID");
 
-                    b.Property<int?>("SubjectID");
+                    b.Property<int?>("StudentID");
 
                     b.Property<bool>("WasEvaluated");
 
@@ -60,7 +60,7 @@ namespace CsEvaluator.Migrations
 
                     b.HasIndex("HomeworkDescriptionID");
 
-                    b.HasIndex("SubjectID");
+                    b.HasIndex("StudentID");
 
                     b.ToTable("Homeworks");
                 });
@@ -77,19 +77,6 @@ namespace CsEvaluator.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Students");
-                });
-
-            modelBuilder.Entity("CsEvaluator.Entities.StudentHomeworkRelationship", b =>
-                {
-                    b.Property<int>("StudentID");
-
-                    b.Property<int>("HomeworkID");
-
-                    b.HasKey("StudentID", "HomeworkID");
-
-                    b.HasIndex("HomeworkID");
-
-                    b.ToTable("StudentHomeworks");
                 });
 
             modelBuilder.Entity("CsEvaluator.Entities.StudentSubjectRelationship", b =>
@@ -120,32 +107,19 @@ namespace CsEvaluator.Migrations
             modelBuilder.Entity("CsEvaluator.Entities.HomeworkDescriptionEntity", b =>
                 {
                     b.HasOne("CsEvaluator.Entities.SubjectEntity", "Subject")
-                        .WithMany()
+                        .WithMany("HomeworkDescriptions")
                         .HasForeignKey("SubjectID");
                 });
 
             modelBuilder.Entity("CsEvaluator.Entities.HomeworkEntity", b =>
                 {
                     b.HasOne("CsEvaluator.Entities.HomeworkDescriptionEntity", "HomeworkDescription")
-                        .WithMany()
+                        .WithMany("Homeworks")
                         .HasForeignKey("HomeworkDescriptionID");
 
-                    b.HasOne("CsEvaluator.Entities.SubjectEntity", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectID");
-                });
-
-            modelBuilder.Entity("CsEvaluator.Entities.StudentHomeworkRelationship", b =>
-                {
-                    b.HasOne("CsEvaluator.Entities.HomeworkEntity", "Homework")
-                        .WithMany("StudentHomeworkRelationship")
-                        .HasForeignKey("HomeworkID")
-                        .OnDelete(DeleteBehavior.Cascade);
-
                     b.HasOne("CsEvaluator.Entities.StudentEntity", "Student")
-                        .WithMany("StudentHomeworkRelationship")
-                        .HasForeignKey("StudentID")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .WithMany("Homeworks")
+                        .HasForeignKey("StudentID");
                 });
 
             modelBuilder.Entity("CsEvaluator.Entities.StudentSubjectRelationship", b =>

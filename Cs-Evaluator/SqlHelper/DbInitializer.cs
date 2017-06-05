@@ -41,7 +41,7 @@ namespace CsEvaluator.SqlHelper
             var homeworkDescriptions = new HomeworkDescriptionEntity[]
             {
                 new HomeworkDescriptionEntity{Subject=subjects[0], fullname="Tema 1", shortDescription="Produs vectorial a 2 vectori",
-                    fullDescription = "Sa se calculeze suma produsului vectorial a doi vectori de lungime 10. Rezultatul va fi scris intr-un fisier txt" },
+                    fullDescription = "Sa se calculeze suma produsului vectorial a doi vectori de lungime 10. Rezultatul va fi afisat in consola" },
                 new HomeworkDescriptionEntity{Subject=subjects[1], fullname="Tema 2", shortDescription="Inmultire doua matrici",
                     fullDescription = "Sa se inmulteasca 2 matrici de marime 3*3 si sa se afiseze rezultatul la consola"}
             };

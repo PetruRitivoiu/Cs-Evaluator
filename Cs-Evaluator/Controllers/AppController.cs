@@ -147,6 +147,7 @@ namespace Cs_Evaluator.Controllers
                 _context.SaveChanges();
 
                 
+                
                 return RedirectToAction("Results", new { homeworkID = he.ID, StudentID = model.StudentID});
             }
 
@@ -170,9 +171,9 @@ namespace Cs_Evaluator.Controllers
 
         public IActionResult Results(int homeworkID, int studentID)
         {
-            ViewData["Message"] = "Rezultatele evaluarilor de pana in prezent";
+            ViewData["Message"] = "Rezultatele evaluarii";
 
-            ResultViewModel model = new ResultViewModel();
+            BPC bpc = new BPC();
 
             HomeworkEntity he = _context.Homeworks.Include(t => t.Student)
                 .Include(t => t.HomeworkDescription)
@@ -180,13 +181,13 @@ namespace Cs_Evaluator.Controllers
                 .FirstOrDefault(t => t.ID == homeworkID);
             StudentEntity se = he.Student;
 
+            ResultViewModel model = new ResultViewModel();
+
             model.StudentName = se.Forename + " " + se.Surname;
             model.SubjectName = he.HomeworkDescription.Subject.Name;
             model.HomeworkName = he.HomeworkDescription.fullname;
             model.HomeworkDescription = he.HomeworkDescription.fullDescription;
             model.EvaluationResult = he.EvaluationResult;
-
-            BPC bpc = new BPC();
 
             var pathToFile = $@"uploads\{he.FileName}"; // -> Arg 1
             var exeFile = he.FileName.Substring(0, he.FileName.LastIndexOf('.')) + "_"  + "_" + he.ID + ".exe"; // -> Arg 2
@@ -196,7 +197,10 @@ namespace Cs_Evaluator.Controllers
 
             string[] args = { pathToFile, exeFile, validationFile, expectedFile};
 
+            bpc.CompileAndScanFile(args);
             Evaluation eval = bpc.Evaluate(args);
+
+
             model.Errors = String.IsNullOrEmpty(eval.StdError) ? "None" : eval.StdError;
             model.EvaluationResult = eval.EvaluationResult;
 

@@ -6,12 +6,12 @@ using System.Linq;
 
 namespace EvaluatorEngine
 {
-    public class BPC : IEvaluator
+    public class ATP : IEvaluator
     {
 
-        private static string COMPILE_AND_EXECUTE = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\CompileAndExecute.bat";
+        private static string COMPILE_AND_EXECUTE = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\ExecuteCPP.bat";
         private static string WORKING_DIRECTORY = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine";
-        private static string AVIRA_COMMAND_LINE_SCANNER = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\ScanFile.bat";
+        private static string SCAN_AND_COMPILE = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\ScanAndCompileCPP.bat";
 
         public void CompileAndScanFile(string[] args)
         {
@@ -19,7 +19,9 @@ namespace EvaluatorEngine
             //Arg[0] -> pathToFile (CS file)
             //Arg[1] -> exeFile  (CS file after compile and build)
 
-            Process myProcess = Process.Start(getProcessStartInfo(AVIRA_COMMAND_LINE_SCANNER, args));
+            args[0] = "\"" + "..\\" + args[0] + "\"";
+
+            Process myProcess = Process.Start(getProcessStartInfo(SCAN_AND_COMPILE, args));
 
             myProcess.Start();
 
@@ -43,7 +45,7 @@ namespace EvaluatorEngine
                 return new Evaluation(-1, "exe file not found. most probably the exe file contained malicious code and was removed");
             }
 
-            Process myProcess = Process.Start(getProcessStartInfo(COMPILE_AND_EXECUTE ,args));
+            Process myProcess = Process.Start(getProcessStartInfo(COMPILE_AND_EXECUTE, args));
 
             myProcess.Start();
 

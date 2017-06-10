@@ -103,7 +103,7 @@ namespace Cs_Evaluator.Controllers
         }
 
         [ImportModelState]
-        public IActionResult BPC(HomeworkViewModel model)
+        public IActionResult ATP(HomeworkViewModel model)
         {
             wrapStudentsData(model);
 
@@ -116,7 +116,7 @@ namespace Cs_Evaluator.Controllers
 
         [HttpPost]
         [ExportModelState]
-        public IActionResult BPC(HomeworkViewModel model, IList<IFormFile> files)
+        public IActionResult ATP(HomeworkViewModel model, IList<IFormFile> files)
         {
             if (ModelState.IsValid)
             {
@@ -131,7 +131,7 @@ namespace Cs_Evaluator.Controllers
                 //form processing
                 HomeworkEntity he = new HomeworkEntity()
                 {
-                    FileName = model.CsProject.FileName,
+                    FileName =  model.CsProject.FileName,
                     HomeworkDescription = _context.HomeworkDescriptions.FirstOrDefault(t => t.ID == model.HomeworkDescriptionID),
                     Student = _context.Students.FirstOrDefault(t => t.ID == model.StudentID)
                 };
@@ -162,18 +162,11 @@ namespace Cs_Evaluator.Controllers
             return View(model);
         }
 
-        public IActionResult ATP()
-        {
-            ViewData["Message"] = "Aici se vor incarca temele pentru disciplina Algoritmi si Tehnici de programare.";
-
-            return View();
-        }
-
         public IActionResult Results(int homeworkID, int studentID)
         {
             ViewData["Message"] = "Rezultatele evaluarii";
 
-            BPC bpc = new BPC();
+            ATP bpc = new ATP();
 
             HomeworkEntity he = _context.Homeworks.Include(t => t.Student)
                 .Include(t => t.HomeworkDescription)
@@ -190,7 +183,7 @@ namespace Cs_Evaluator.Controllers
             model.EvaluationResult = he.EvaluationResult;
 
             var pathToFile = $@"uploads\{he.FileName}"; // -> Arg 1
-            var exeFile = he.FileName.Substring(0, he.FileName.LastIndexOf('.')) + "_"  + "_" + he.ID + ".exe"; // -> Arg 2
+            var exeFile = he.FileName.Substring(0, he.FileName.LastIndexOf('.')) + ".exe"; // -> Arg 2
             var validationFile = $@"uploads\validation_files\{he.HomeworkDescription.ID}\{he.HomeworkDescription.initialFile}"; // -> Arg 3
             var expectedFile = $@"uploads\validation_files\{he.HomeworkDescription.ID}\{he.HomeworkDescription.expectedFile}"; // -> Arg 4
 
@@ -199,14 +192,13 @@ namespace Cs_Evaluator.Controllers
 
             bpc.CompileAndScanFile(args);
             Evaluation eval = bpc.Evaluate(args);
-
+            
 
             model.Errors = String.IsNullOrEmpty(eval.StdError) ? "None" : eval.StdError;
             model.EvaluationResult = eval.EvaluationResult;
 
             return View(model);
         }
-
 
         public IActionResult Error()
         {

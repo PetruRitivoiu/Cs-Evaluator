@@ -6,4 +6,4 @@ rem %~1 -- numele fisierului executabil
 rem %~2 -- fisierul de validare
 
 
-exes\"%~1" "%~2"
+exes\"%~2" "%~3"

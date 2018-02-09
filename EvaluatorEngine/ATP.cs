@@ -9,19 +9,21 @@ namespace EvaluatorEngine
     public class ATP : IEvaluator
     {
 
-        private static string COMPILE_AND_EXECUTE = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\ExecuteCPP.bat";
+        private static string EXECUTE_CPP = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\ExecuteCPP.bat";
         private static string WORKING_DIRECTORY = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine";
-        private static string SCAN_AND_COMPILE = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\ScanAndCompileCPP.bat";
+        private static string COMPILE_AND_SCAN = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\ScanAndCompileCPP.bat";
 
         public void CompileAndScanFile(string[] args)
         {
             //relative paths
-            //Arg[0] -> pathToFile (CS file)
-            //Arg[1] -> exeFile  (CS file after compile and build)
+            //Arg[0] = %~1 -> pathToFile (.cpp file)
+            //Arg[1] = %~2 -> exeFile  (.cpp file after compile and build)
+            //Arg[2] = %~3 -> validationFile
+            //Arg[3] = %~4-> expectedFile
 
             args[0] = "\"" + "..\\" + args[0] + "\"";
 
-            Process myProcess = Process.Start(getProcessStartInfo(SCAN_AND_COMPILE, args));
+            Process myProcess = Process.Start(getProcessStartInfo(COMPILE_AND_SCAN, args));
 
             myProcess.Start();
 
@@ -35,17 +37,17 @@ namespace EvaluatorEngine
         public Evaluation Evaluate(string[] args)
         {
             //relative paths
-            //Arg[0] -> pathToFile (CS file)
-            //Arg[1] -> exeFile  (CS file after compile and build)
-            //Arg[2] -> validationFile
-            //Arg[3] -> expectedFile
+            //Arg[0] = %~1 -> pathToFile (.cpp file)
+            //Arg[1] = %~2 -> exeFile  (.cpp file after compile and build)
+            //Arg[2] = %~3 -> validationFile
+            //Arg[3] = %~4-> expectedFile
 
             if (!File.Exists(WORKING_DIRECTORY + @"\exes\" + args[1]))
             {
                 return new Evaluation(-1, "exe file not found. most probably the exe file contained malicious code and was removed");
             }
 
-            Process myProcess = Process.Start(getProcessStartInfo(COMPILE_AND_EXECUTE, args));
+            Process myProcess = Process.Start(getProcessStartInfo(EXECUTE_CPP, args));
 
             myProcess.Start();
 

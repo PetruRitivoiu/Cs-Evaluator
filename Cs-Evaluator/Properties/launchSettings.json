@@ -15,7 +15,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "Cs_Evaluator": {
+    "CsEvaluator": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

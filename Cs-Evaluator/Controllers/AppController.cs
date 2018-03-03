@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using CsEvaluator.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -9,18 +8,13 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.AspNetCore.Hosting;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Configuration;
 using CsEvaluator.SqlHelper;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using EFLogging;
-using EvaluatorEngine;
 using CsEvaluator.Entities;
 using CsEvaluator.ModelState;
 
-namespace Cs_Evaluator.Controllers
+namespace CsEvaluator.Controllers
 {
     public class AppController : Controller
     {
@@ -71,21 +65,20 @@ namespace Cs_Evaluator.Controllers
         private void processFileUpload(HomeworkViewModel model)
         {
             string filename = null;
-            long size = 0;
             try
             {
+
                 filename = ContentDispositionHeaderValue
                     .Parse(model.CsProject.ContentDisposition)
                     .FileName
-                    .Trim('"');
-                filename = $@"C:\Users\thinkpad-e560\\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\uploads\{filename}";
-                size += model.CsProject.Length;
+                    .ToString();
+
+                filename = $@"C:\Users\thinkpad-e560\\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\uploads\{model.CsProject.FileName}";
                 using (FileStream fs = System.IO.File.Create(filename))
                 {
                     model.CsProject.CopyTo(fs);
                     fs.Flush();
                 }
-                ViewBag.Message = $"{size} bytes uploaded successfully!";
             }
 
             catch (Exception ex)
@@ -103,20 +96,20 @@ namespace Cs_Evaluator.Controllers
         }
 
         [ImportModelState]
-        public IActionResult ATP(HomeworkViewModel model)
+        public IActionResult PAW(HomeworkViewModel model)
         {
             wrapStudentsData(model);
 
             wrapHomeworkDescriptionData(model);
 
-            ViewData["Message"] = "Aici se vor incarca temele pentru disciplina Bazele Programarii Calculatoarelor.";
+            ViewData["Message"] = "Aici se vor incarca temele pentru disciplina Programarea Aplicatiilor Windows.";
 
             return View(model);
         }
 
         [HttpPost]
         [ExportModelState]
-        public IActionResult ATP(HomeworkViewModel model, IList<IFormFile> files)
+        public IActionResult PAW(HomeworkViewModel model, IList<IFormFile> files)
         {
             if (ModelState.IsValid)
             {
@@ -125,7 +118,6 @@ namespace Cs_Evaluator.Controllers
                 wrapHomeworkDescriptionData(model);
 
                 //file processing
-
                 processFileUpload(model);
 
                 //form processing
@@ -138,20 +130,18 @@ namespace Cs_Evaluator.Controllers
 
                 StudentEntity se = _context.Students.FirstOrDefault(t => t.ID == model.StudentID);
                 se.Homeworks.Add(he);
-                
-                //compile and execute
-                //save data in database
 
+                //compile and execute
+
+                //save data in database
                 _context.Homeworks.Add(he);
 
                 _context.SaveChanges();
-
-                
                 
                 return RedirectToAction("Results", new { homeworkID = he.ID, StudentID = model.StudentID});
             }
 
-            return RedirectToAction("BPC");
+            return RedirectToAction("PAW");
         }
 
         public IActionResult Subjects()
@@ -165,8 +155,6 @@ namespace Cs_Evaluator.Controllers
         public IActionResult Results(int homeworkID, int studentID)
         {
             ViewData["Message"] = "Rezultatele evaluarii";
-
-            ATP bpc = new ATP();
 
             HomeworkEntity he = _context.Homeworks.Include(t => t.Student)
                 .Include(t => t.HomeworkDescription)
@@ -190,12 +178,12 @@ namespace Cs_Evaluator.Controllers
 
             string[] args = { pathToFile, exeFile, validationFile, expectedFile};
 
-            bpc.CompileAndScanFile(args);
-            Evaluation eval = bpc.Evaluate(args);
+            //bpc.CompileAndScanFile(args);
+            //Evaluation eval = bpc.Evaluate(args);
             
 
-            model.Errors = String.IsNullOrEmpty(eval.StdError) ? "None" : eval.StdError;
-            model.EvaluationResult = eval.EvaluationResult;
+            //model.Errors = String.IsNullOrEmpty(eval.StdError) ? "None" : eval.StdError;
+            //model.EvaluationResult = eval.EvaluationResult;
 
             return View(model);
         }

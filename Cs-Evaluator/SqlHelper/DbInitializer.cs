@@ -34,28 +34,24 @@ namespace CsEvaluator.SqlHelper
 
             var subjects = new SubjectEntity[]
             {
-                new SubjectEntity{Name="BPC"},
-                new SubjectEntity{Name="ATP"}
+                new SubjectEntity{Name="PAW"},
             };
 
             var homeworkDescriptions = new HomeworkDescriptionEntity[]
             {
-                new HomeworkDescriptionEntity{Subject=subjects[0], fullname="Tema 1", shortDescription="Produs vectorial a 2 vectori",
-                    fullDescription = "Sa se calculeze suma produsului vectorial a doi vectori de lungime 10. Rezultatul va fi afisat in consola" },
-                new HomeworkDescriptionEntity{Subject=subjects[1], fullname="Tema 2", shortDescription="Inmultire doua matrici",
-                    fullDescription = "Sa se inmulteasca 2 matrici de marime 3*3 si sa se afiseze rezultatul la consola"}
+                new HomeworkDescriptionEntity{Subject=subjects[0], fullname="Proiect PAW 2018", shortDescription="Proiect PAW 2018",
+                    fullDescription = "Cerinta proiectului poate fi gasita la adresa http://acs.ase.ro/paw" }
             };
 
             var homeworks = new HomeworkEntity[]
             {
-                new HomeworkEntity{FileName="MOCK", HomeworkDescription = homeworkDescriptions[0]},
-                new HomeworkEntity{FileName="MOCK", HomeworkDescription = homeworkDescriptions[1]}
+                new HomeworkEntity{FileName="MOCK", HomeworkDescription = homeworkDescriptions[0]}
             };
 
             var studentSubjectRelationship = new StudentSubjectRelationship[]
             {
                 new StudentSubjectRelationship{Student=students[0], Subject=subjects[0]},
-                new StudentSubjectRelationship{Student=students[1], Subject=subjects[1]}
+                new StudentSubjectRelationship{Student=students[1], Subject=subjects[0]}
             };
 
             _context.Students.AddRange(students);

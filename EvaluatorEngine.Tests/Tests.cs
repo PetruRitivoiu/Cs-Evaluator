@@ -1,4 +1,8 @@
-﻿using System;
+﻿using Microsoft.CSharp;
+using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace EvaluatorEngine.Tests
 {
@@ -15,9 +19,10 @@ namespace EvaluatorEngine.Tests
 
             watch.Stop();
 
-            Console.WriteLine($"Tests.Main total time elapsed: {watch.ElapsedMilliseconds}" );
+            Console.WriteLine($"Tests.Main total time elapsed: {watch.ElapsedMilliseconds}");
 
             Console.ReadLine();
         }
+
     }
 }

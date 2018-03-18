@@ -6,6 +6,8 @@ using System.Reflection;
 using System.IO;
 using System.Diagnostics;
 using EvaluatorEngine.util;
+using EvaluatorEngine.FileParser;
+using EvaluatorEngine.ReflectionEvaluator.Rules;
 
 namespace EvaluatorEngine
 {
@@ -33,6 +35,19 @@ namespace EvaluatorEngine
             var assembly = Assembly.LoadFile(dllFileFullName);
 
             return null;
+
+            //----reflection evaluation -----//
+
+            var xmlParser = new XmlParser();
+            var list = xmlParser.ParseToList(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine.Tests\Demo XML\DemoProiect.xml");
+
+            int counter = 0;
+            foreach(Rule rule in list)
+            {
+                counter += rule.Evaluate(assembly) == true ? 1 : 0;
+            }
+
+
         }
 
         private BuildInfo BuildAndScan(string csFileFullName, string dllFileFullName)

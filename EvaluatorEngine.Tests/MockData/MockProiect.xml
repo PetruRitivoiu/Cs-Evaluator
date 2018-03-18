@@ -1,21 +1,21 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <rules>
-  
+
   <rule id="1">
     <subject-type>
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       IS
     </verb>
     <complement-type>
-      IComparable
+      NullOrDefault
     </complement-type>
     <complement-value>
-      NULL/Any
+      IComparable
     </complement-value>
     <count>
       2
@@ -26,16 +26,16 @@
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       IS
     </verb>
     <complement-type>
-      ICloneable
+      NullOrDefault
     </complement-type>
     <complement-value>
-      NULL/Any
+      ICloneable
     </complement-value>
     <count>
       2
@@ -46,7 +46,7 @@
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       IS
@@ -55,7 +55,7 @@
       Abstract
     </complement-type>
     <complement-value>
-      NULL/Any
+      NullOrDefault
     </complement-value>
     <count>
       1
@@ -66,16 +66,16 @@
       Interface
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       IS
     </verb>
     <complement-type>
-      NULL/Any
+      NullOrDefault
     </complement-type>
     <complement-value>
-      NULL/Any
+      NullOrDefault
     </complement-value>
     <count>
       1
@@ -86,7 +86,7 @@
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       HAS
@@ -98,7 +98,7 @@
       Custom
     </complement-value>
     <count>
-      #ClassCount
+      2
     </count>
   </rule>
   <rule id="6">
@@ -106,7 +106,7 @@
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       HAS
@@ -118,7 +118,7 @@
       WithField
     </complement-value>
     <count>
-      #ClassCount
+      2
     </count>
   </rule>
   <rule id="7">
@@ -126,7 +126,7 @@
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       HAS
@@ -135,7 +135,7 @@
       OperatorOverload
     </complement-type>
     <complement-value>
-      NULL/Any
+      NullOrDefault
     </complement-value>
     <count>
       2
@@ -146,7 +146,7 @@
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       HAS
@@ -155,7 +155,7 @@
       Array
     </complement-type>
     <complement-value>
-      NULL/Any
+      NullOrDefault
     </complement-value>
     <count>
       1
@@ -166,7 +166,7 @@
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       HAS
@@ -186,7 +186,7 @@
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       HAS
@@ -195,7 +195,7 @@
       event
     </complement-type>
     <complement-value>
-      NULL/Any
+      NullOrDefault
     </complement-value>
     <count>
       1
@@ -206,7 +206,7 @@
       Class
     </subject-type>
     <subject-value>
-      NULL/Any
+      NullOrDefault
     </subject-value>
     <verb>
       HAS
@@ -215,7 +215,7 @@
       delegate
     </complement-type>
     <complement-value>
-      NULL/Any
+      NullOrDefault
     </complement-value>
     <count>
       1

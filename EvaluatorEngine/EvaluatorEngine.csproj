@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="dlls\" />
+    <Folder Include="UnitTestingEvaluator\" />
     <Folder Include="uploads\" />
     <Folder Include="uploads\homeworks\" />
   </ItemGroup>

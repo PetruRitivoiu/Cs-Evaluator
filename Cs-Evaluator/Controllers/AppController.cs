@@ -35,7 +35,7 @@ namespace CsEvaluator.Controllers
 
         //Utilitary methods
 
-        private void wrapStudentsData(HomeworkViewModel model)
+        private void WrapStudentsData(HomeworkViewModel model)
         {
             List<StudentPreviewModel> studentsPreview = new List<StudentPreviewModel>();
             IEnumerable<StudentEntity> students = _context.Students.ToList();
@@ -49,7 +49,7 @@ namespace CsEvaluator.Controllers
 
         }
 
-        private void wrapHomeworkDescriptionData(HomeworkViewModel model)
+        private void WrapHomeworkDescriptionData(HomeworkViewModel model)
         {
             List<HomeworkDescriptionPreviewModel> homeworkDescriptionsPreview = new List<HomeworkDescriptionPreviewModel>();
             IEnumerable<HomeworkDescriptionEntity> homeworkDescriptions = _context.HomeworkDescriptions.ToList();
@@ -62,7 +62,7 @@ namespace CsEvaluator.Controllers
             model.HomeworkDescriptions = homeworkDescriptionsPreview;
         }
 
-        private void processFileUpload(HomeworkViewModel model)
+        private void ProcessFileUpload(HomeworkViewModel model)
         {
             string filename = null;
             try
@@ -98,9 +98,9 @@ namespace CsEvaluator.Controllers
         [ImportModelState]
         public IActionResult PAW(HomeworkViewModel model)
         {
-            wrapStudentsData(model);
+            WrapStudentsData(model);
 
-            wrapHomeworkDescriptionData(model);
+            WrapHomeworkDescriptionData(model);
 
             ViewData["Message"] = "Aici se vor incarca temele pentru disciplina Programarea Aplicatiilor Windows.";
 
@@ -113,12 +113,12 @@ namespace CsEvaluator.Controllers
         {
             if (ModelState.IsValid)
             {
-                wrapStudentsData(model);
+                WrapStudentsData(model);
 
-                wrapHomeworkDescriptionData(model);
+                WrapHomeworkDescriptionData(model);
 
                 //file processing
-                processFileUpload(model);
+                ProcessFileUpload(model);
 
                 //form processing
                 HomeworkEntity he = new HomeworkEntity()
@@ -147,8 +147,10 @@ namespace CsEvaluator.Controllers
         public IActionResult Subjects()
         {
             var data = _context.Subjects.ToList();
-            var model = new SubjectsViewModel();
-            model.Subjects = data;
+            var model = new SubjectsViewModel
+            {
+                Subjects = data
+            };
             return View(model);
         }
 
@@ -162,13 +164,14 @@ namespace CsEvaluator.Controllers
                 .FirstOrDefault(t => t.ID == homeworkID);
             StudentEntity se = he.Student;
 
-            ResultViewModel model = new ResultViewModel();
-
-            model.StudentName = se.Forename + " " + se.Surname;
-            model.SubjectName = he.HomeworkDescription.Subject.Name;
-            model.HomeworkName = he.HomeworkDescription.fullname;
-            model.HomeworkDescription = he.HomeworkDescription.fullDescription;
-            model.EvaluationResult = he.EvaluationResult;
+            ResultViewModel model = new ResultViewModel
+            {
+                StudentName = se.Forename + " " + se.Surname,
+                SubjectName = he.HomeworkDescription.Subject.Name,
+                HomeworkName = he.HomeworkDescription.fullname,
+                HomeworkDescription = he.HomeworkDescription.fullDescription,
+                EvaluationResult = he.EvaluationResult
+            };
 
             var pathToFile = $@"uploads\{he.FileName}"; // -> Arg 1
             var exeFile = he.FileName.Substring(0, he.FileName.LastIndexOf('.')) + ".exe"; // -> Arg 2

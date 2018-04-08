@@ -15,10 +15,12 @@ namespace EvaluatorEngine.FileParser
 
             foreach (XElement element in doc.Root.Elements("rule"))
             {
+                Rule rule = null;
+
                 try
                 {
                     var verb = ParseEnumIgnoreCase<Verb>(element.Element("verb").Value.Trim());
-                    var rule = GetRuleByVerb(verb);
+                    rule = Rule.CreateByVerb(verb);
 
                     rule.Id = Int32.Parse(element.Attribute("id").Value.Trim());
                     rule.SubjectType = ParseEnumIgnoreCase<SubjectType>(element.Element("subject-type").Value.Trim());
@@ -27,32 +29,19 @@ namespace EvaluatorEngine.FileParser
                     rule.ComplementType = ParseEnumIgnoreCase<ComplementType>(element.Element("complement-type").Value.Trim());
                     rule.ComplementValue = element.Element("complement-value").Value.Trim();
                     rule.Count = Int32.Parse(element.Element("count").Value.Trim());
-
-                    rules.Add(rule);
                 }
                 catch(Exception ex)
                 {
                     //log error
                     continue;
                 }
+                finally
+                {
+                    rules.Add(rule);
+                }
             }
 
             return rules;
-        }
-
-        private Rule GetRuleByVerb(Verb verb)
-        {
-            switch (verb)
-            {
-                case Verb.HAS:
-                    return new HasRule();
-
-                case Verb.IS:
-                    return new IsRule();
-
-                default:
-                    return null;
-            }
         }
 
         private T ParseEnumIgnoreCase<T>(string value)

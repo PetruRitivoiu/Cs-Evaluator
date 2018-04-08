@@ -17,4 +17,10 @@
     <ProjectReference Include="..\EvaluatorEngine\EvaluatorEngine.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="OperatorNames.txt">
+      <Generator>MSDataSetGenerator</Generator>
+    </None>
+  </ItemGroup>
+
 </Project>

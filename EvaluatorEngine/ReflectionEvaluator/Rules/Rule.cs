@@ -24,5 +24,20 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
             return string.Compare(SubjectValue, Rule.NullOrDefault, true) != 0
                 || !string.IsNullOrWhiteSpace(SubjectValue);
         }
+
+        public static Rule CreateByVerb(Verb verb)
+        {
+            switch (verb)
+            {
+                case Verb.HAS:
+                    return new HasRule();
+
+                case Verb.IS:
+                    return new IsRule();
+
+                default:
+                    return null;
+            }
+        }
     }
 }

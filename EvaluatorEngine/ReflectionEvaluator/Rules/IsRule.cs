@@ -10,56 +10,74 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
     {
         public override bool Evaluate(Assembly assembly)
         {
-            IEnumerable<Type> types;
+            IEnumerable<Type> types = assembly.GetTypes();
 
+            types = BySubjectType(types);
+            types = BySubjectName(types);
+            types = ByComplementType(types);
+            types = ByComplementValue(types);
+
+            return types.Count() >= Count;
+        }
+
+        private IEnumerable<Type> BySubjectType(IEnumerable<Type> types)
+        {
             switch (SubjectType)
             {
                 case SubjectType.Class:
-                    types = assembly.GetTypes().Where(t => t.IsClass);
-                    break;
+                    return types.Where(t => t.IsClass);
 
                 case SubjectType.Interface:
-                    types = assembly.GetTypes().Where(t => t.IsInterface);
-                    break;
+                    return types.Where(t => t.IsInterface);
 
                 default:
-                    types = null;
                     //log error
-                    break;
+                    return null;
             }
+        }
 
-            if (!IsNullOrDefault(SubjectValue))
-            {
-                types = types.Where(t => t.Name == SubjectValue);
-            }
+        private IEnumerable<Type> BySubjectName(IEnumerable<Type> types)
+        {
+            return IsNullOrDefault(SubjectValue) ? types : types.Where(t => t.Name == SubjectValue);
+        }
 
+        private IEnumerable<Type> ByComplementType(IEnumerable<Type> types)
+        {
             if (ComplementType != ComplementType.NullOrDefault)
             {
                 switch (ComplementType)
                 {
                     case ComplementType.Abstract:
-                        types = types.Where(t => t.IsAbstract);
-                        break;
+                        return types.Where(t => t.IsAbstract);
 
                     case ComplementType.Interface:
-                        types = types.Where(t => t.IsInterface);
-                        break;
+                        return types.Where(t => t.IsInterface);
 
                     case ComplementType.Enum:
-                        types = types.Where(t => t.IsEnum);
-                        break;
+                        return types.Where(t => t.IsEnum);
+
+                    default:
+                        //log error
+                        return null;
                 }
             }
+            else
+            {
+                return types;
+            }
+        }
 
+        private IEnumerable<Type> ByComplementValue(IEnumerable<Type> types)
+        {
             if (!IsNullOrDefault(ComplementValue))
             {
                 var desiredType = System.AppDomain.CurrentDomain.GetAssemblies().SelectMany(x => x.GetTypes()).First(x => x.Name == ComplementValue);
 
-                types = types.Where(t => desiredType.IsAssignableFrom(t));
+                return types.Where(t => desiredType.IsAssignableFrom(t));
+            } else
+            {
+                return types;
             }
-
-            return types.Count() >= Count;
-
         }
     }
 }

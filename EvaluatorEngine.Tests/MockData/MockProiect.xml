@@ -95,7 +95,7 @@
       Constructor
     </complement-type>
     <complement-value>
-      Custom
+      WithArgs
     </complement-value>
     <count>
       2
@@ -115,7 +115,7 @@
       Property
     </complement-type>
     <complement-value>
-      WithField
+      BackingField
     </complement-value>
     <count>
       2

@@ -64,7 +64,10 @@ namespace EvaluatorEngine.Tests
             int counter = 0;
             foreach (Rule rule in list)
             {
-                counter += rule.Evaluate(assembly) == true ? 1 : 0;
+                if (rule is IsRule)
+                {
+                    counter += rule.Evaluate(assembly) == true ? 1 : 0;
+                }
             }
 
             Assert.AreEqual(4, counter);

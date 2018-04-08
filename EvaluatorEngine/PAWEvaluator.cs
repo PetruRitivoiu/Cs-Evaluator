@@ -8,6 +8,7 @@ using System.Diagnostics;
 using EvaluatorEngine.util;
 using EvaluatorEngine.FileParser;
 using EvaluatorEngine.ReflectionEvaluator.Rules;
+using System.Threading.Tasks;
 
 namespace EvaluatorEngine
 {
@@ -42,7 +43,7 @@ namespace EvaluatorEngine
             var list = xmlParser.ParseToList(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine.Tests\Demo XML\DemoProiect.xml");
 
             int counter = 0;
-            foreach(Rule rule in list)
+            foreach (Rule rule in list)
             {
                 counter += rule.Evaluate(assembly) == true ? 1 : 0;
             }
@@ -59,7 +60,6 @@ namespace EvaluatorEngine
                 process.Start();
 
                 string output = process.StandardOutput.ReadToEnd();
-                Console.WriteLine(output);
 
                 process.WaitForExit();
 

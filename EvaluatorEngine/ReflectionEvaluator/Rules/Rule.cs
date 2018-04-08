@@ -18,6 +18,7 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
 
         public abstract bool Evaluate(Assembly assembly);
 
+        //util
         protected bool IsNullOrDefault(string s)
         {
             return string.Compare(SubjectValue, Rule.NullOrDefault, true) != 0

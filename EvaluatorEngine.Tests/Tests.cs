@@ -3,6 +3,7 @@ using EvaluatorEngine.ReflectionEvaluator.Rules;
 using NUnit.Framework;
 using System;
 using System.Reflection;
+using System.Threading;
 
 namespace EvaluatorEngine.Tests
 {
@@ -22,6 +23,20 @@ namespace EvaluatorEngine.Tests
             watch.Stop();
 
             Console.WriteLine($"Tests.Main total time elapsed: {watch.ElapsedMilliseconds}");
+
+            Assert.AreEqual(1, 1);
+        }
+
+        [Test]
+        public void TestTaskEvaluation()
+        {
+            var a = TaskFactory.CreateAndStart("DemoProiectCS", "asdf.txt");
+            var b = TaskFactory.CreateAndStart("DemoProiectCS", "asdf.txt");
+            var c = TaskFactory.CreateAndStart("DemoProiectCS", "asdf.txt");
+
+            a.Wait();
+            b.Wait();
+            c.Wait();
 
             Assert.AreEqual(1, 1);
         }

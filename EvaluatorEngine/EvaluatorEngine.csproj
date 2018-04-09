@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="uploads\homeworks\DemoProiectCS.cs" />
+    <Compile Remove="Uploads\homeworks\DemoProiectCS.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,8 +22,8 @@
   <ItemGroup>
     <Folder Include="dlls\" />
     <Folder Include="UnitTestingEvaluator\" />
-    <Folder Include="uploads\" />
-    <Folder Include="uploads\homeworks\" />
+    <Folder Include="Uploads\" />
+    <Folder Include="Uploads\homeworks\" />
   </ItemGroup>
 
   <ItemGroup>

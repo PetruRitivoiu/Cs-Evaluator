@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EvaluatorEngine
+namespace EvaluatorEngine.Util
 {
     public class Config
     {

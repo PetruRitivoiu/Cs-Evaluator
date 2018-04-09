@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EvaluatorEngine.util
+namespace EvaluatorEngine.Util
 {
     public class BuildInfo
     {

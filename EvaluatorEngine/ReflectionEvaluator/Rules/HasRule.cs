@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Linq;
 using System;
 using System.Runtime.CompilerServices;
+using EvaluatorEngine.Util;
 
 namespace EvaluatorEngine.ReflectionEvaluator.Rules
 {
@@ -84,7 +85,7 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
         private int ByConstructor(Type type)
         {
             //validation for auto-generated inner-classes for events
-            if (IsSameOrSubclass(typeof(MulticastDelegate), type))
+            if (UtilHelper.IsSameOrSubclass(typeof(MulticastDelegate), type))
             {
                 return 0;
             }
@@ -247,12 +248,5 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
             return count;
         }
 
-
-        //Helper functions area
-        private static bool IsSameOrSubclass(Type potentialBase, Type potentialDescendant)
-        {
-            return potentialDescendant.IsSubclassOf(potentialBase)
-                   || potentialDescendant == potentialBase;
-        }
     }
 }

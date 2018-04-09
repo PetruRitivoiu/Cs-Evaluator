@@ -41,17 +41,17 @@ namespace EvaluatorEngine.Tests
             Assert.AreEqual(1, 1);
         }
 
-        [Test]
-        public void TestXmlParser()
+        [TestCase(10)]
+        public void TestXmlParser(int expected)
         {
             var xml = new XmlParser();
             var rules = xml.ParseToList(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine.Tests\MockData\MockProiect.xml");
 
-            Assert.AreEqual(rules.Count, 11);
+            Assert.AreEqual(expected, rules.Count);
         }
 
-        [Test]
-        public void TestRules()
+        [TestCase(10)]
+        public void TestRules(int expected)
         {
             var xmlParser = new XmlParser();
 
@@ -61,16 +61,13 @@ namespace EvaluatorEngine.Tests
             var assembly =
                 Assembly.LoadFrom(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine.Tests\MockData\MockProiectCS.dll");
 
-            int counter = 0;
+            int count = 0;
             foreach (Rule rule in list)
             {
-                if (rule is IsRule)
-                {
-                    counter += rule.Evaluate(assembly) == true ? 1 : 0;
-                }
+                count += rule.Evaluate(assembly) == true ? 1 : 0;
             }
 
-            Assert.AreEqual(4, counter);
+            Assert.AreEqual(expected, count);
         }
 
     }

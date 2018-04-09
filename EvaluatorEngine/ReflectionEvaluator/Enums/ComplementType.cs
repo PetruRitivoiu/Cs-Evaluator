@@ -13,6 +13,7 @@ namespace EvaluatorEngine.ReflectionEvaluator.Enums
         Delegate,
         Enum,
         Event,
+        Field,
         Interface,
         OperatorOverload,
         Property,

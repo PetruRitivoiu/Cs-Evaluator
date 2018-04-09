@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
 using System;
+using System.Runtime.CompilerServices;
 
 namespace EvaluatorEngine.ReflectionEvaluator.Rules
 {
@@ -11,6 +12,7 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
         public override bool Evaluate(Assembly assembly)
         {
             List<Type> types = assembly.GetTypes().ToList();
+
             int actualCount = int.MinValue;
 
             types = BySubjectType(types);
@@ -19,21 +21,31 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
             switch (ComplementType)
             {
                 case ComplementType.Constructor:
-                    actualCount = CheckForAll(types, ByConstructor);
+                    actualCount = CheckAll(types, ByConstructor);
                     break;
 
                 case ComplementType.Property:
-                    actualCount = CheckForAll(types, ByProperty);
+                    actualCount = CheckAll(types, ByProperty);
                     break;
 
                 case ComplementType.OperatorOverload:
-                    actualCount = CheckForAll(types, ByOperatorOverLoad);
+                    actualCount = CheckAll(types, ByOperatorOverLoad);
+                    break;
+
+                case ComplementType.Event:
+                    actualCount = CheckAll(types, ByEvent);
+                    break;
+
+                case ComplementType.Delegate:
+                    actualCount = CheckAll(types, ByDelegate);
+                    break;
+
+                case ComplementType.Field:
+                    actualCount = CheckAll(types, ByField);
                     break;
             }
 
-
-
-            return actualCount == Count;
+            return actualCount >= Count;
         }
 
         private List<Type> BySubjectType(List<Type> types)
@@ -41,10 +53,10 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
             switch (SubjectType)
             {
                 case SubjectType.Class:
-                    return types.Where(t => t.IsClass);
+                    return types.Where(t => t.IsClass).ToList();
 
                 case SubjectType.Interface:
-                    return types.Where(t => t.IsInterface);
+                    return types.Where(t => t.IsInterface).ToList();
 
                 default:
                     return types;
@@ -53,12 +65,12 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
 
         private List<Type> BySubjectName(List<Type> types)
         {
-            return IsNullOrDefault(SubjectValue) ? types : types.Where(t => t.Name == SubjectValue);
+            return IsNullOrDefault(SubjectValue) ? types : types.Where(t => t.Name == SubjectValue).ToList();
         }
 
 
         //One to rule them all
-        private int CheckForAll(List<Type> types, Func<Type, int> function)
+        private int CheckAll(List<Type> types, Func<Type, int> function)
         {
             int count = 0;
 
@@ -71,6 +83,12 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
         //Atomic functions area
         private int ByConstructor(Type type)
         {
+            //validation for auto-generated inner-classes for events
+            if (IsSameOrSubclass(typeof(MulticastDelegate), type))
+            {
+                return 0;
+            }
+
             int count = 0;
             var ctors = type.GetConstructors(BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
@@ -155,6 +173,86 @@ namespace EvaluatorEngine.ReflectionEvaluator.Rules
             }
 
             return count;
+        }
+
+        private int ByEvent(Type type)
+        {
+            int count = 0;
+            var events = type.GetEvents();
+
+            foreach (EventInfo e in events)
+            {
+                if (IsNullOrDefault(ComplementValue))
+                {
+                    count++;
+                }
+                else if (e.Name == ComplementValue)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private int ByDelegate(Type type)
+        {
+            int count = 0;
+            var delegates = type.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic)
+                           .Where(t => t.BaseType == typeof(MulticastDelegate));
+
+            foreach (var del in delegates)
+            {
+                if (IsNullOrDefault(ComplementValue))
+                {
+                    count++;
+                }
+                else if (del.Name == ComplementValue)
+                {
+                    count++;
+                }
+            }
+
+            return count;
+        }
+
+        private int ByField(Type t)
+        {
+            int count = 0;
+            var fields = t.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.DeclaredOnly);
+
+            switch (ComplementValue)
+            {
+                case nameof(Field.Array):
+                    foreach (var field in fields)
+                    {
+                        var fieldType = field.FieldType;
+
+                        //Check for string array
+                        if (fieldType.IsArray)
+                        {
+                            count++;
+                        }
+                    }
+                    break;
+                case nameof(Field.NullOrDefault):
+                    count = fields.Length;
+                    break;
+                default:
+                    count = 0;
+                    //log error
+                    break;
+            }
+
+            return count;
+        }
+
+
+        //Helper functions area
+        private static bool IsSameOrSubclass(Type potentialBase, Type potentialDescendant)
+        {
+            return potentialDescendant.IsSubclassOf(potentialBase)
+                   || potentialDescendant == potentialBase;
         }
     }
 }

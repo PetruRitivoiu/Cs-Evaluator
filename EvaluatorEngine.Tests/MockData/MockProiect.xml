@@ -152,10 +152,10 @@
       HAS
     </verb>
     <complement-type>
-      Array
+      Field
     </complement-type>
     <complement-value>
-      NullOrDefault
+      Array
     </complement-value>
     <count>
       1
@@ -193,26 +193,6 @@
     </verb>
     <complement-type>
       event
-    </complement-type>
-    <complement-value>
-      NullOrDefault
-    </complement-value>
-    <count>
-      1
-    </count>
-  </rule>
-  <rule id="11">
-    <subject-type>
-      Class
-    </subject-type>
-    <subject-value>
-      NullOrDefault
-    </subject-value>
-    <verb>
-      HAS
-    </verb>
-    <complement-type>
-      delegate
     </complement-type>
     <complement-value>
       NullOrDefault

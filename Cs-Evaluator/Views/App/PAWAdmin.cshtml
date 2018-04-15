@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "PAWAdmin";
+    @model CsEvaluator.Data.ViewModels.HomeworkDescriptionViewModel;
+}
+
+<h2>PAWAdmin</h2>
+<hr />
+<h4>Adaugare tema noua</h4>
+
+<form asp-action="PAWAdmin" asp-controller="App" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+    <span asp-validation-summary="ModelOnly" style="color:darkred"></span>
+
+    <div class="form-group-sm">
+        <input type="text" placeholder="Homework Name" class="form-control" asp-for="Name" />
+    </div>
+
+    <br />
+
+    <div class="form-group-sm">
+        <input type="text" placeholder="Short Description" class="form-control" asp-for="ShortDescription" />
+    </div>
+
+    <br />
+
+    <div class="form-group-sm">
+        <input type="text" placeholder="Full Description" class="form-control" asp-for="FullDescription" />
+    </div>
+
+    <br />
+
+    <div class="form-group-sm">
+        <label for="reflection-file-input" class="custom-file-upload">Reflection File input</label>
+        <input id="reflection-file-input" type="file" asp-for="ReflectionFile">
+    </div>
+
+    <br />
+
+    <div class="form-group-sm">
+        <label for="unit-test-file-input" class="custom-file-upload">Unit Tests File input</label>
+        <input id="unit-test-file-input" type="file" asp-for="UnitTestFile">
+    </div>
+
+    <br />
+
+    <div class="form-group-sm">
+        <input type="submit" value="Submit" class="form-control btn-success" />
+    </div>
+
+</form>
+

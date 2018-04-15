@@ -1,0 +1,19 @@
+Sub 1
+1) analiza in componente principale cu demonstratii	(4p)
+2) principiul lui ward de ierarhizare	(2p)
+
+Sub 2
+1) analiza discriminanta liniar, functiile fisher si puterea de discriminare	(4p)
+2) metode de ierarhizare in analiza cluster	(2p)
+
+Sub 3
+1) Analiza canonica cu determinare de factori (4p)
+2) Analiza discriminanta (2p)
+
+Sub 4
+1) Analiza bivariata cu descompunere de matrice de inertie	(2p)
+2) Discriminarea bayesiana	(4p)
+
+Sub 5
+1) Variabilele si factorii canonici demonstratii	(4p)
+2) Indicatorii de variabilitate la analiza discriminanta	(2p)

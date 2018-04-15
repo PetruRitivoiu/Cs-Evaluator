@@ -1,7 +1,72 @@
 ﻿@{
     ViewData["Title"] = "Programarea Aplicatiilor Windows";
+    @model CsEvaluator.Data.ViewModels.HomeworkViewModel
 }
+
+@section scripts {
+    <script scr="~lib/jquery/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script scr="~lib/jquery/jquery-validation-unobstrusive/jquery.validate.unosbstrusive.min.js"></script>
+}
+
 <h2>@ViewData["Title"].</h2>
 <h3>@ViewData["Message"]</h3>
 
-@Html.Partial("~/Views/Shared/_SubmitFormPartial.cshtml")
+<hr />
+
+<div class="container">
+    @foreach (var hdpm in Model.HomeworkDescriptions)
+    {
+        <div class="form-group-sm">
+            Nume tema:
+            <p>@hdpm.Fullname</p>
+
+            Descriere tema:
+            <p>@hdpm.FullDescription</p>
+
+            <hr />
+        </div>
+    }
+</div>
+
+<h3> Submit homework </h3>
+
+<br />
+
+<form asp-action="PAW" asp-controller="App" method="post" enctype="multipart/form-data" class="form-horizontal">
+
+    <span asp-validation-summary="ModelOnly" style="color:darkred"></span>
+
+    <div class="form-group-sm">
+        <select class="form-control" asp-for="StudentID"
+                asp-items="@(new SelectList(Model.Students, "ID", "Fullname"))">
+            <option>Student Name</option>
+        </select>
+
+        <span asp-validation-for="StudentID" class="text-danger"></span>
+    </div>
+
+    <br />
+
+    <div class="form-group-sm">
+        <select class="form-control" asp-for="HomeworkDescriptionID"
+                asp-items="@(new SelectList(Model.HomeworkDescriptions, "ID", "Fullname"))">
+            <option>Homework Name</option>
+        </select>
+
+        <span asp-validation-for="HomeworkDescriptionID" class="text-danger"></span>
+    </div>
+
+    <br />
+
+    <div class="form-group-sm">
+        <label for="csProjFileInput" class="custom-file-upload">File input</label>
+        <input id="csProjFileInput" type="file" asp-for="CsProject">
+    </div>
+
+    <br />
+
+    <div class="form-group-sm">
+        <input type="submit" value="Submit" class="form-control btn-success" />
+    </div>
+
+</form>

@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using CsEvaluator.Entities;
-using CsEvaluator.SqlHelper;
 using EFLogging;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using CsEvaluator.Database.SqlHelper;
+using CsEvaluator.Engine;
+using CsEvaluator.Repository.Interfaces;
 
 namespace CsEvaluator
 {
@@ -38,6 +35,10 @@ namespace CsEvaluator
             services.AddDbContext<CsEvaluatorContext>();
 
             services.AddSingleton(Configuration);
+
+            services.AddSingleton<IEvaluator, PAWEvaluator>();
+
+            services.AddSingleton<IAppRepository, AppRepository>();
 
             services.AddTransient<DbInitializer>();
 

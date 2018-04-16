@@ -58,3 +58,7 @@ input[type="file"] {
 select {
     color: black
 }
+
+span {
+    display: block
+}

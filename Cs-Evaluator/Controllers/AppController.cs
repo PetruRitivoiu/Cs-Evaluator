@@ -13,6 +13,7 @@ using CsEvaluator.Data.Entities;
 using CsEvaluator.ModelState;
 using CsEvaluator.Repository.Interfaces;
 using CsEvaluator.Engine;
+using CsEvaluator.Engine.Util;
 
 
 namespace CsEvaluator.Controllers
@@ -73,21 +74,21 @@ namespace CsEvaluator.Controllers
             return null;
         }
 
-        private HomeworkViewModel ProcessFileUpload(HomeworkViewModel model)
+        private async void ProcessFileUpload(IFormFile file, string basePath)
         {
             string filename = null;
             try
             {
 
                 filename = ContentDispositionHeaderValue
-                    .Parse(model.CsProject.ContentDisposition)
+                    .Parse(file.ContentDisposition)
                     .FileName
                     .ToString();
 
-                filename = $@"C:\Users\thinkpad-e560\\Documents\Visual Studio 2017\Projects\cs-evaluator\CsEvaluator.Engine\uploads\{model.CsProject.FileName}";
+                filename = Path.Combine(basePath, file.FileName);
                 using (FileStream fs = System.IO.File.Create(filename))
                 {
-                    model.CsProject.CopyTo(fs);
+                    await file.CopyToAsync(fs);
                     fs.Flush();
                 }
             }
@@ -97,8 +98,6 @@ namespace CsEvaluator.Controllers
                 _logger.LogError("\r\nAppController -- file upload failed: \r\n" + ex.StackTrace);
                 throw;
             }
-
-            return model;
         }
 
 
@@ -132,7 +131,15 @@ namespace CsEvaluator.Controllers
 
                 model = WrapHomeworkDescriptionData(model);
 
-                model = ProcessFileUpload(model);
+                try
+                {
+                    ProcessFileUpload(model.CsProject, Config.BasePathToCodeFiles);
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Error");
+                }
+
 
                 //compile and execute and then save data to DB
                 //Evaluation eval = _evaluator.Evaluate(model.CsProject.FileName, /*trebuie adus in model de la inceput*/);
@@ -162,7 +169,21 @@ namespace CsEvaluator.Controllers
         {
             if (ModelState.IsValid)
             {
-                //do something
+                var fullValidationFolder = Path.Combine(Config.BasePathToValidationFiles, model.Name);
+
+                Directory.CreateDirectory(fullValidationFolder);
+
+                try
+                {
+                    ProcessFileUpload(model.ReflectionFile, fullValidationFolder);
+                    ProcessFileUpload(model.UnitTestFile, fullValidationFolder);
+                }
+                catch (Exception)
+                {
+                    return RedirectToAction("Error");
+                }
+
+                _repository.HomeworkDescriptionRepository.Add(model);
             }
 
             return RedirectToAction("PAWAdmin");

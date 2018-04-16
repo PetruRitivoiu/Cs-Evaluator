@@ -15,6 +15,9 @@ namespace CsEvaluator.Data.ViewModels
         public string FullDescription { get; set; }
 
         [Required]
+        public string Subject { get; set; }
+
+        [Required]
         [Display(Name = "Reflection File")]
         public IFormFile ReflectionFile { get; set; }
 

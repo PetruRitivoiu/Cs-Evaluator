@@ -20,8 +20,8 @@
   <ItemGroup>
     <Folder Include="dlls\" />
     <Folder Include="UnitTestingEvaluator\" />
-    <Folder Include="Uploads\" />
     <Folder Include="Uploads\homeworks\" />
+    <Folder Include="Uploads\validation-files\" />
   </ItemGroup>
 
   <ItemGroup>

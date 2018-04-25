@@ -11,5 +11,20 @@ namespace CsEvaluator.Engine.Util
             return potentialDescendant.IsSubclassOf(potentialBase)
                    || potentialDescendant == potentialBase;
         }
+
+        public static string ChangeVirtualExtension(string file, string extension)
+        {
+            if (extension[0] != '.')
+            {
+                extension = "." + extension;
+            }
+
+            return file.Remove(file.LastIndexOf(".")) + extension;
+        }
+
+        public static string RemoveVirtualExtension(string file)
+        {
+            return file.Remove(file.LastIndexOf("."));
+        }
     }
 }

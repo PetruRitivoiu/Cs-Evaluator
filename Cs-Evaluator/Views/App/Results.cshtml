@@ -6,9 +6,24 @@
 <h2>@ViewData["Title"].</h2>
 <h3>@ViewData["Message"]</h3>
 
-<p>Student: @Model.StudentName</p>
-<p>Subject: @Model.SubjectName</p>
-<p>Homework: @Model.HomeworkName</p>
-<p>Homework description: @Model.HomeworkDescription</p>
-<p>Evaluation result: @Model.EvaluationResult</p>
-<p>Errors: @Model.Errors</p>
+<div class="container">
+    <p>Student: @Model.StudentName</p>
+    <p>Subject: @Model.SubjectName</p>
+    <p>Homework: @Model.HomeworkName</p>
+    <p>Homework description: @Model.HomeworkDescription</p>
+    <p>Evaluation result: @Model.Evaluation.EvaluationResult</p>
+
+    <hr />
+
+    @foreach (var ruleEvaluation in Model.Evaluation.RulesEvaluation)
+    {
+        <p> Nume regula: <b>@ruleEvaluation.Rule.ToString()</b></p>
+
+        <p>Rezultat evaluare: <b>@ruleEvaluation.HasPassed</b></p>
+
+        <p>Informatii aditionale: <b>@ruleEvaluation.Reason</b></p>
+        <hr />
+    }
+
+    <p>Errors: <b>@Model.Evaluation.Error</b></p>
+</div>

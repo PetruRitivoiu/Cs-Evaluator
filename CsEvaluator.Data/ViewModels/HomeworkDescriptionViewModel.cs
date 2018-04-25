@@ -14,7 +14,6 @@ namespace CsEvaluator.Data.ViewModels
         [Required]
         public string FullDescription { get; set; }
 
-        [Required]
         public string Subject { get; set; }
 
         [Required]

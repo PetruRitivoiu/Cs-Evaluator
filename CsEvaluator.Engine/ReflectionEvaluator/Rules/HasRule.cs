@@ -9,7 +9,7 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
 {
     public class HasRule : Rule
     {
-        public override bool Evaluate(Assembly assembly)
+        public override RuleEvaluation Evaluate(Assembly assembly)
         {
             List<Type> types = assembly.GetTypes().ToList();
 
@@ -45,7 +45,14 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
                     break;
             }
 
-            return actualCount >= Count;
+            if (actualCount >= Count)
+            {
+                return new RuleEvaluation(this, true);
+            }
+            else
+            {
+                return new RuleEvaluation(this, false);
+            }
         }
 
         private List<Type> BySubjectType(List<Type> types)

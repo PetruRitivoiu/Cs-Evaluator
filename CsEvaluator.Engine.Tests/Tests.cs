@@ -5,7 +5,7 @@ using NUnit.Framework;
 using System;
 using System.Reflection;
 
-namespace EvaluatorEngine.Tests
+namespace CsEvaluator.Engine.Tests
 {
     [TestFixture]
     public class Tests
@@ -45,7 +45,7 @@ namespace EvaluatorEngine.Tests
         public void TestXmlParser(int expected)
         {
             var xml = new XmlParser();
-            var rules = xml.ParseToList(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine.Tests\MockData\MockProiect.xml");
+            var rules = xml.ParseToList(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\CsEvaluator.Engine.Tests\MockData\MockProiect.xml");
 
             Assert.AreEqual(expected, rules.Count);
         }
@@ -56,15 +56,15 @@ namespace EvaluatorEngine.Tests
             var xmlParser = new XmlParser();
 
             var list =
-                xmlParser.ParseToList(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine.Tests\MockData\MockProiect.xml");
+                xmlParser.ParseToList(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\CsEvaluator.Engine.Tests\MockData\MockProiect.xml");
 
             var assembly =
-                Assembly.LoadFrom(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine.Tests\MockData\MockProiectCS.dll");
+                Assembly.LoadFrom(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\CsEvaluator.Engine.Tests\MockData\MockProiectCS.dll");
 
             int count = 0;
             foreach (Rule rule in list)
             {
-                count += rule.Evaluate(assembly) == true ? 1 : 0;
+                count += rule.Evaluate(assembly).HasPassed == true ? 1 : 0;
             }
 
             Assert.AreEqual(expected, count);

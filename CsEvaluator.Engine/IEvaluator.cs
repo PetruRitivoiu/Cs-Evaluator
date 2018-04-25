@@ -2,6 +2,6 @@
 {
     public interface IEvaluator
     {
-        Evaluation Evaluate(string shortFileName, string shortValidationFileName);
+        Evaluation Evaluate(string shortFileName, string fullReflectionFile);
     }
 }

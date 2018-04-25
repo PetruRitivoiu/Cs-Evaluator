@@ -38,12 +38,8 @@ namespace CsEvaluator.Database.SqlHelper
             var homeworkDescriptions = new HomeworkDescriptionEntity[]
             {
                 new HomeworkDescriptionEntity{Subject=subjects[0], Name="Proiect PAW 2018", ShortDescription="Proiect PAW 2018",
-                    FullDescription = "Cerinta proiectului poate fi gasita la adresa http://acs.ase.ro/paw" }
-            };
-
-            var homeworks = new HomeworkEntity[]
-            {
-                new HomeworkEntity{FileName="MOCK", HomeworkDescription = homeworkDescriptions[0]}
+                    FullDescription = "Cerinta proiectului poate fi gasita la adresa http://acs.ase.ro/paw",
+                    ReflectionFile = "MockReflectionFile.xml"}
             };
 
             var studentSubjectRelationship = new StudentSubjectRelationship[]
@@ -55,7 +51,6 @@ namespace CsEvaluator.Database.SqlHelper
             _context.Students.AddRange(students);
             _context.Subjects.AddRange(subjects);
             _context.HomeworkDescriptions.AddRange(homeworkDescriptions);
-            _context.Homeworks.AddRange(homeworks);
             _context.StudentSubjects.AddRange(studentSubjectRelationship);
 
             await _context.SaveChangesAsync();

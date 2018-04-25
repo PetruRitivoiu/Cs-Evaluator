@@ -34,12 +34,19 @@ namespace CsEvaluator.Repository
             };
 
             var subject = Context.Subjects.FirstOrDefault(s => s.Name == hdvm.Subject);
+
+            subject.HomeworkDescriptions.Add(hde);
             hde.Subject = subject;
 
             Context.HomeworkDescriptions.Add(hde);
             Context.SaveChanges();
 
             return hde.ID;
+        }
+
+        public HomeworkDescriptionEntity GetById(int id)
+        {
+            return Context.HomeworkDescriptions.Where(hde => hde.ID == id).FirstOrDefault();
         }
     }
 }

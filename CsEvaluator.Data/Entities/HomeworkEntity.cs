@@ -10,8 +10,7 @@ namespace CsEvaluator.Data.Entities
         public int ID { get; set; }
         public string FileName { get; set; }
 
-        public bool WasEvaluated { get; set; } = false;
-        public int EvaluationResult { get; set; } = -1;
+        public double EvaluationResult { get; set; } = -1;
 
         public virtual HomeworkDescriptionEntity HomeworkDescription { get; set; }
         public virtual StudentEntity Student { get; set; }

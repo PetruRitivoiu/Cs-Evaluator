@@ -5,7 +5,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Uploads\homeworks\DemoProiectCS.cs" />
+    <Compile Remove="Uploads\dlls\**" />
+    <Compile Remove="Uploads\homeworks\**" />
+    <Compile Remove="Uploads\validation-files\**" />
+    <EmbeddedResource Remove="Uploads\dlls\**" />
+    <EmbeddedResource Remove="Uploads\homeworks\**" />
+    <EmbeddedResource Remove="Uploads\validation-files\**" />
+    <None Remove="Uploads\dlls\**" />
+    <None Remove="Uploads\homeworks\**" />
+    <None Remove="Uploads\validation-files\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,13 +26,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="dlls\" />
     <Folder Include="UnitTestingEvaluator\" />
-    <Folder Include="Uploads\homeworks\" />
-    <Folder Include="Uploads\validation-files\" />
+    <Folder Include="Uploads\" />
   </ItemGroup>
 
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\newtonsoft.json\10.0.1\lib\netstandard1.3\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System">
       <HintPath>System</HintPath>
     </Reference>

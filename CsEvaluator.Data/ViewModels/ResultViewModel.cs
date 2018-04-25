@@ -1,4 +1,6 @@
-﻿namespace CsEvaluator.Data.ViewModels
+﻿using CsEvaluator.Engine;
+
+namespace CsEvaluator.Data.ViewModels
 {
     public class ResultViewModel
     {
@@ -10,8 +12,6 @@
 
         public string StudentName { get; set; }
 
-        public double EvaluationResult { get; set; }
-
-        public string Errors { get; set; }
+        public Evaluation Evaluation { get; set; }
     }
 }

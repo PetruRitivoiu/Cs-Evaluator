@@ -25,8 +25,7 @@ namespace CsEvaluator.Repository
                 FileName = model.CsProject.FileName,
                 HomeworkDescription = Context.HomeworkDescriptions.FirstOrDefault(t => t.ID == model.HomeworkDescriptionID),
                 Student = Context.Students.FirstOrDefault(t => t.ID == model.StudentID),
-                EvaluationResult = model.EvaluationResult,
-                WasEvaluated = model.WasEvaluated
+                EvaluationResult = model.EvaluationResult
             };
 
             Context.Homeworks.Add(he);

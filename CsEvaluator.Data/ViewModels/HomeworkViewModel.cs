@@ -11,19 +11,12 @@ namespace CsEvaluator.Data.ViewModels
         public IFormFile CsProject { get; set; }
 
         [Required]
-        public string ReflectionValidationFile { get; set; }
-
-        [Required]
-        public string UnitTestsValidationFile { get; set; }
-
-        [Required]
         public int StudentID { get; set; }
 
         [Required]
         public int HomeworkDescriptionID { get; set; }
 
-        public bool WasEvaluated { get; set; } = false;
-        public int EvaluationResult { get; set; } = -1;
+        public double EvaluationResult { get; set; } = -1;
 
         public IEnumerable<StudentPreviewModel> Students { get; set; }
 

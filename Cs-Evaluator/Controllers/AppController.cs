@@ -14,7 +14,7 @@ using CsEvaluator.ModelState;
 using CsEvaluator.Repository.Interfaces;
 using CsEvaluator.Engine;
 using CsEvaluator.Engine.Util;
-
+using Newtonsoft.Json;
 
 namespace CsEvaluator.Controllers
 {
@@ -67,7 +67,7 @@ namespace CsEvaluator.Controllers
             return model;
         }
 
-        private HomeworkViewModel WrapValidationFiles(HomeworkViewModel model)
+        private HomeworkViewModel WrapEvaluationData(HomeworkViewModel model)
         {
             //model.ReflectionValidationFile = _repository.
 
@@ -108,7 +108,6 @@ namespace CsEvaluator.Controllers
             return View();
         }
 
-
         [ImportModelState]
         public IActionResult PAW(HomeworkViewModel model)
         {
@@ -141,11 +140,22 @@ namespace CsEvaluator.Controllers
                 }
 
 
+                //get validation files
+                var homeworkDescriptionName = _repository.HomeworkDescriptionRepository.GetById(model.HomeworkDescriptionID).Name;
+                var reflectionValidationFile = _repository.HomeworkDescriptionRepository.GetById(model.HomeworkDescriptionID).ReflectionFile;
+
+                var reflectionFolder = Path.Combine(Config.BasePathToValidationFiles, homeworkDescriptionName);
+                var reflectionFile = Path.Combine(reflectionFolder, reflectionValidationFile);
+
                 //compile and execute and then save data to DB
                 //Evaluation eval = _evaluator.Evaluate(model.CsProject.FileName, /*trebuie adus in model de la inceput*/);
+                Evaluation eval = TaskFactory.CreateAndStart(model.CsProject.FileName, reflectionFile).Result;
 
-                model.WasEvaluated = false;
-                model.EvaluationResult = -1;
+                model.EvaluationResult = eval.EvaluationResult;
+                TempData["evaluation"] = JsonConvert.SerializeObject(eval, new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.All
+                });
 
                 //returns HomeworkID
                 var homeworkID = _repository.HomeworkRepository.Add(model);
@@ -156,10 +166,11 @@ namespace CsEvaluator.Controllers
             return RedirectToAction("PAW");
         }
 
-
         [ImportModelState]
         public IActionResult PAWAdmin()
         {
+            ViewData["Message"] = "Upload new Homework Definition";
+
             return View();
         }
 
@@ -169,6 +180,8 @@ namespace CsEvaluator.Controllers
         {
             if (ModelState.IsValid)
             {
+                model.Subject = "PAW";
+
                 var fullValidationFolder = Path.Combine(Config.BasePathToValidationFiles, model.Name);
 
                 Directory.CreateDirectory(fullValidationFolder);
@@ -213,8 +226,13 @@ namespace CsEvaluator.Controllers
                 SubjectName = he.HomeworkDescription.Subject.Name,
                 HomeworkName = he.HomeworkDescription.Name,
                 HomeworkDescription = he.HomeworkDescription.FullDescription,
-                EvaluationResult = he.EvaluationResult
+                Evaluation = JsonConvert.DeserializeObject<Evaluation>(TempData["evaluation"].ToString(), new JsonSerializerSettings
+                {
+                    TypeNameHandling = TypeNameHandling.All
+                })
             };
+
+            TempData.Remove("evaluation");
 
             return View(model);
         }

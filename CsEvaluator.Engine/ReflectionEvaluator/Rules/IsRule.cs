@@ -8,7 +8,7 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
 {
     public class IsRule : Rule
     {
-        public override bool Evaluate(Assembly assembly)
+        public override RuleEvaluation Evaluate(Assembly assembly)
         {
             IEnumerable<Type> types = assembly.GetTypes();
 
@@ -17,7 +17,14 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
             types = ByComplementType(types);
             types = ByComplementValue(types);
 
-            return types.Count() >= Count;
+            if (types.Count() >= Count)
+            {
+                return new RuleEvaluation(this, true);
+            }
+            else
+            {
+                return new RuleEvaluation(this, false);
+            }
         }
 
         private IEnumerable<Type> BySubjectType(IEnumerable<Type> types)

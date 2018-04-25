@@ -7,7 +7,7 @@ namespace CsEvaluator.Engine.Util
         public static Process BuildAndScanProcess(string args)
         {
                 var process = new Process();
-                process.StartInfo.FileName = @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine\BuildAndScan.bat";
+                process.StartInfo.FileName = Config.PathToBuildAndScanScript;
                 process.StartInfo.Arguments = args;
                 process.StartInfo.CreateNoWindow = true;
                 process.StartInfo.UseShellExecute = false;

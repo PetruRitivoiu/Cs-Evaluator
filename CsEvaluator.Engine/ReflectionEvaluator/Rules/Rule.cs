@@ -1,10 +1,15 @@
 ﻿using CsEvaluator.Engine.ReflectionEvaluator.Enums;
+using Newtonsoft.Json;
 using System.Reflection;
+using System.Text;
 
 namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
 {
     public abstract class Rule
     {
+        [JsonConstructor]
+        protected Rule() { }
+
         public int Id { get; set; }
 
         public SubjectType SubjectType { get; set; }
@@ -16,13 +21,72 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
 
         protected static string NullOrDefault = "NullOrDefault";
 
-        public abstract bool Evaluate(Assembly assembly);
+        public abstract RuleEvaluation Evaluate(Assembly assembly);
 
         //util
         protected bool IsNullOrDefault(string s)
         {
-            return string.Compare(SubjectValue, Rule.NullOrDefault, true) != 0
-                || !string.IsNullOrWhiteSpace(SubjectValue);
+            return string.Compare(s, Rule.NullOrDefault, true) == 0
+                || string.IsNullOrWhiteSpace(s);
+        }
+
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            bool andFlag = false;
+            bool verbFlag = true;
+
+            sb.Append($"Defined members of type {SubjectType}");
+
+            if (!IsNullOrDefault(SubjectValue))
+            {
+                sb.Append($" named {SubjectValue}");
+            }
+
+            //flags
+            if (ComplementType != ComplementType.NullOrDefault || !IsNullOrDefault(ComplementValue))
+            {
+                andFlag = true;
+            }
+            if (ComplementType == ComplementType.NullOrDefault && IsNullOrDefault(ComplementValue))
+            {
+                verbFlag = false;
+            }
+
+            if (verbFlag)
+            {
+                sb.Append(Verb == Verb.HAS ? " HAVE" : " ARE");
+            }
+
+            if (ComplementType != ComplementType.NullOrDefault)
+            {
+                if (verbFlag && Verb == Verb.IS)
+                {
+                    sb.Append(" OF TYPE");
+                }
+                sb.Append($" {ComplementType}");
+            }
+
+            if (!IsNullOrDefault(ComplementValue))
+            {
+                if (Verb == Verb.HAS)
+                {
+                    sb.Append($" named {ComplementValue}");
+                }
+                else
+                {
+                    sb.Append($" OF TYPE {ComplementValue}");
+                }
+            }
+
+            if (andFlag)
+            {
+                sb.Append(" AND");
+            }
+
+            sb.Append($" count in total at least {Count}");
+
+            return sb.ToString();
         }
 
         public static Rule CreateByVerb(Verb verb)

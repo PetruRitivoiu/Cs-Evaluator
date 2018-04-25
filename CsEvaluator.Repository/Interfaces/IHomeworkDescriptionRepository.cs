@@ -9,5 +9,7 @@ namespace CsEvaluator.Repository.Interfaces
         List<HomeworkDescriptionEntity> GetAll();
 
         int Add(HomeworkDescriptionViewModel hdvm);
+
+        HomeworkDescriptionEntity GetById(int id);
     }
 }

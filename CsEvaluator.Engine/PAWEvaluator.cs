@@ -5,44 +5,56 @@ using System.IO;
 using CsEvaluator.Engine.Util;
 using CsEvaluator.Engine.FileParser;
 using CsEvaluator.Engine.ReflectionEvaluator.Rules;
+using System.Collections.Generic;
 
 namespace CsEvaluator.Engine
 {
     public class PAWEvaluator : IEvaluator
     {
-        public Evaluation Evaluate(string shortFileName, string shortValidationFileName)
+        public PAWEvaluator()
+        {
+            Directory.CreateDirectory(Config.BasePathToCodeFiles);
+            Directory.CreateDirectory(Config.BasePathToDllFiles);
+            Directory.CreateDirectory(Config.BasePathToValidationFiles);
+        }
+
+        public Evaluation Evaluate(string shortFileName, string fullReflectionFile)
         {
             var csFileFullName = Path.Combine(Config.BasePathToCodeFiles, shortFileName);
-            csFileFullName += ".cs";
             var dllFileFullName = Path.Combine(Config.BasePathToDllFiles, shortFileName);
-            dllFileFullName += ".dll";
+            dllFileFullName = UtilHelper.ChangeVirtualExtension(dllFileFullName, ".dll");
 
             var buildInfo = BuildAndScan(csFileFullName, dllFileFullName);
 
             if (!buildInfo.Succes)
             {
-                return new Evaluation(-1, buildInfo.Info);
+                return new Evaluation(buildInfo.Info);
             }
 
-            if (!ScanForViruses("DemoProiectCS"))
+            if (!ScanForViruses(UtilHelper.RemoveVirtualExtension(shortFileName)))
             {
-                return new Evaluation(-1, "dll file contains viruses");
+                return new Evaluation("dll file contains viruses");
             }
 
             var assembly = Assembly.LoadFile(dllFileFullName);
 
             //----reflection evaluation -----//
 
-            var xmlParser = new XmlParser();
-            var list = xmlParser.ParseToList(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\EvaluatorEngine.Tests\Demo XML\DemoProiect.xml");
+            IParser xmlParser = new XmlParser();
+            var rulesList = xmlParser.ParseToList(fullReflectionFile);
 
             int counter = 0;
-            foreach (Rule rule in list)
+            var rulesEvaluation = new List<RuleEvaluation>();
+            foreach (Rule rule in rulesList)
             {
-                counter += rule.Evaluate(assembly) == true ? 1 : 0;
+                var result = rule.Evaluate(assembly);
+                rulesEvaluation.Add(result);
+                counter += result.HasPassed == true ? 1 : 0;
             }
 
-            return new Evaluation(counter, null);
+            double studentsMark = (double)counter / rulesList.Count() * 10;
+
+            return new Evaluation(studentsMark, rulesEvaluation);
         }
 
         private BuildInfo BuildAndScan(string csFileFullName, string dllFileFullName)
@@ -82,9 +94,9 @@ namespace CsEvaluator.Engine
 
             var file = new FileInfo(files.FirstOrDefault());
 
-            switch(file.Extension)
+            switch (file.Extension)
             {
-                case ".vir": 
+                case ".vir":
                     return false;
 
                 case ".dll":

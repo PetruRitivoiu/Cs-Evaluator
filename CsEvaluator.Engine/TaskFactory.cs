@@ -7,7 +7,7 @@ namespace CsEvaluator.Engine
     {
         public static int TaskCounter = 0;
 
-        public static Task CreateAndStart(string shortFileName, string shortValidationFileName)
+        public static Task<Evaluation> CreateAndStart(string shortFileName, string shortValidationFileName)
         {
             Interlocked.Increment(ref TaskCounter);
 

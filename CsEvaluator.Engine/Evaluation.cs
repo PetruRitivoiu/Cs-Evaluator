@@ -1,15 +1,30 @@
-﻿namespace CsEvaluator.Engine
+﻿using CsEvaluator.Engine.ReflectionEvaluator.Rules;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+
+namespace CsEvaluator.Engine
 {
     public class Evaluation
     {
-        public Evaluation(int evaluationResult, string stdError)
+        [JsonConstructor]
+        private Evaluation() { }
+
+        public Evaluation(double evaluationResult, List<RuleEvaluation> rulesEvaluation)
         {
-            this.EvaluationResult = evaluationResult;
-            this.StdError = stdError;
+            EvaluationResult = evaluationResult;
+            RulesEvaluation = rulesEvaluation;
         }
 
-        public double EvaluationResult { get; }
+        public Evaluation(string error)
+        {
+            EvaluationResult = -1;
+            Error = error;
+        }
 
-        public string StdError { get; }
+        public double EvaluationResult { get; set; }
+
+        public List<RuleEvaluation> RulesEvaluation{ get; set; }
+
+        public string Error { get; set; }
     }
 }

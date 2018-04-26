@@ -67,13 +67,6 @@ namespace CsEvaluator.Controllers
             return model;
         }
 
-        private HomeworkViewModel WrapEvaluationData(HomeworkViewModel model)
-        {
-            //model.ReflectionValidationFile = _repository.
-
-            return null;
-        }
-
         private async void ProcessFileUpload(IFormFile file, string basePath)
         {
             string filename = null;
@@ -197,7 +190,6 @@ namespace CsEvaluator.Controllers
 
             return RedirectToAction("PAWAdmin");
         }
-
 
         public IActionResult Subjects()
         {

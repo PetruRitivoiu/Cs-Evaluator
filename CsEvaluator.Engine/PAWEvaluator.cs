@@ -40,6 +40,13 @@ namespace CsEvaluator.Engine
 
             //----reflection evaluation -----//
 
+            Evaluation evaluation = ReflectionEvaluation(assembly, fullReflectionFile);
+
+            return evaluation;
+        }
+
+        private Evaluation ReflectionEvaluation(Assembly assembly, string fullReflectionFile)
+        {
             IParser xmlParser = new XmlParser();
             var rulesList = xmlParser.ParseToList(fullReflectionFile);
 

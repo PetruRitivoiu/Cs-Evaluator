@@ -15,15 +15,21 @@
 
     <hr />
 
-    @foreach (var ruleEvaluation in Model.Evaluation.RulesEvaluation)
+    @if (string.IsNullOrWhiteSpace(Model.Evaluation.Error))
     {
-        <p> Nume regula: <b>@ruleEvaluation.Rule.ToString()</b></p>
+        @foreach (var ruleEvaluation in Model.Evaluation.RulesEvaluation)
+        {
+            <p> Nume regula: <b>@ruleEvaluation.RuleInfo.Description</b></p>
 
-        <p>Rezultat evaluare: <b>@ruleEvaluation.HasPassed</b></p>
+            <p>Rezultat evaluare: <b>@ruleEvaluation.HasPassed</b></p>
 
-        <p>Informatii aditionale: <b>@ruleEvaluation.Reason</b></p>
-        <hr />
+            <p>Informatii aditionale: <b>@ruleEvaluation.Reason</b></p>
+            <hr />
+        }
     }
 
-    <p>Errors: <b>@Model.Evaluation.Error</b></p>
+    else
+    {
+        <p>Errors: <b>@Model.Evaluation.Error</b></p>
+    }
 </div>

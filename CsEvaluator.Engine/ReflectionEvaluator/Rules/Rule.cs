@@ -7,9 +7,6 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
 {
     public abstract class Rule
     {
-        [JsonConstructor]
-        protected Rule() { }
-
         public int Id { get; set; }
 
         public SubjectType SubjectType { get; set; }
@@ -28,6 +25,21 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
         {
             return string.Compare(s, Rule.NullOrDefault, true) == 0
                 || string.IsNullOrWhiteSpace(s);
+        }
+
+        public static Rule CreateByVerb(Verb verb)
+        {
+            switch (verb)
+            {
+                case Verb.HAS:
+                    return new HasRule();
+
+                case Verb.IS:
+                    return new IsRule();
+
+                default:
+                    return null;
+            }
         }
 
         public override string ToString()
@@ -89,19 +101,5 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
             return sb.ToString();
         }
 
-        public static Rule CreateByVerb(Verb verb)
-        {
-            switch (verb)
-            {
-                case Verb.HAS:
-                    return new HasRule();
-
-                case Verb.IS:
-                    return new IsRule();
-
-                default:
-                    return null;
-            }
-        }
     }
 }

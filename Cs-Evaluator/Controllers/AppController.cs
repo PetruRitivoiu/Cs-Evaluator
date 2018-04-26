@@ -148,14 +148,10 @@ namespace CsEvaluator.Controllers
                 var reflectionFile = Path.Combine(reflectionFolder, reflectionValidationFile);
 
                 //compile and execute and then save data to DB
-                //Evaluation eval = _evaluator.Evaluate(model.CsProject.FileName, /*trebuie adus in model de la inceput*/);
                 Evaluation eval = TaskFactory.CreateAndStart(model.CsProject.FileName, reflectionFile).Result;
 
                 model.EvaluationResult = eval.EvaluationResult;
-                TempData["evaluation"] = JsonConvert.SerializeObject(eval, new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                });
+                TempData["evaluation"] = JsonConvert.SerializeObject(eval);
 
                 //returns HomeworkID
                 var homeworkID = _repository.HomeworkRepository.Add(model);
@@ -226,10 +222,7 @@ namespace CsEvaluator.Controllers
                 SubjectName = he.HomeworkDescription.Subject.Name,
                 HomeworkName = he.HomeworkDescription.Name,
                 HomeworkDescription = he.HomeworkDescription.FullDescription,
-                Evaluation = JsonConvert.DeserializeObject<Evaluation>(TempData["evaluation"].ToString(), new JsonSerializerSettings
-                {
-                    TypeNameHandling = TypeNameHandling.All
-                })
+                Evaluation = JsonConvert.DeserializeObject<Evaluation>(TempData["evaluation"].ToString())
             };
 
             TempData.Remove("evaluation");

@@ -19,11 +19,11 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
 
             if (types.Count() >= Count)
             {
-                return new RuleEvaluation(this, true);
+                return new RuleEvaluation(new RuleInfo(this), true);
             }
             else
             {
-                return new RuleEvaluation(this, false);
+                return new RuleEvaluation(new RuleInfo(this), false);
             }
         }
 

@@ -7,14 +7,14 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
         [JsonConstructor]
         private RuleEvaluation() { }
 
-        public RuleEvaluation(Rule rule, bool hasPassed, string reason = null)
+        public RuleEvaluation(RuleInfo ruleInfo, bool hasPassed, string reason = null)
         {
-            Rule = rule;
+            RuleInfo = ruleInfo;
             HasPassed = hasPassed;
             Reason = reason;
         }
 
-        public Rule Rule { get; set; }
+        public RuleInfo RuleInfo { get; set; }
         public bool HasPassed { get; set; }
         public string Reason { get; set; }
     }

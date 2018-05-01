@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace CsEvaluator.Data.Entities
+﻿namespace CsEvaluator.Data.Entities
 {
     public class HomeworkEntity
     {

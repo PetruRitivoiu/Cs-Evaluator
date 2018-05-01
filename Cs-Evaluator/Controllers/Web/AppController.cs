@@ -15,8 +15,10 @@ using CsEvaluator.Repository.Interfaces;
 using CsEvaluator.Engine;
 using CsEvaluator.Engine.Util;
 using Newtonsoft.Json;
+using System.Threading.Tasks;
+using System.IO.Compression;
 
-namespace CsEvaluator.Controllers
+namespace CsEvaluator.Controllers.Web
 {
     public class AppController : Controller
     {
@@ -67,7 +69,7 @@ namespace CsEvaluator.Controllers
             return model;
         }
 
-        private async void ProcessFileUpload(IFormFile file, string basePath)
+        private async Task<string> ProcessFileUpload(IFormFile file, string basePath)
         {
             string filename = null;
             try
@@ -84,6 +86,8 @@ namespace CsEvaluator.Controllers
                     await file.CopyToAsync(fs);
                     fs.Flush();
                 }
+
+                return filename;
             }
 
             catch (Exception ex)
@@ -93,6 +97,14 @@ namespace CsEvaluator.Controllers
             }
         }
 
+        private async Task<bool> ProcessZipUpload(IFormFile file, string basePath)
+        {
+            string zipFile = await ProcessFileUpload(file, basePath);
+
+            ZipFile.ExtractToDirectory(zipFile, basePath, true);
+
+            return true;
+        }
 
         //Controller methods
         public IActionResult Index()
@@ -108,48 +120,53 @@ namespace CsEvaluator.Controllers
 
             model = WrapHomeworkDescriptionData(model);
 
-            ViewData["Message"] = "Aici se vor incarca temele pentru disciplina Programarea Aplicatiilor Windows.";
+            ViewData["Message"] = "Aici se vor incarca temele pentru disciplina Programarea Aplicatiilor Windows (PAW)";
+
+            ViewData["Details"] = "Se va incarca o arhiva .zip cu fisierele .cs ale solutiei + dll-urile nuget-urilor folosite (daca este cazul)";
 
             return View(model);
         }
 
         [HttpPost]
         [ExportModelState]
-        public IActionResult PAW(HomeworkViewModel model, IList<IFormFile> files)
+        public async Task<IActionResult> PAW(HomeworkViewModel model, IList<IFormFile> files)
         {
             if (ModelState.IsValid)
             {
                 model = WrapStudentsData(model);
-
                 model = WrapHomeworkDescriptionData(model);
+
+                //get validation files
+                var homeworkDescriptionName = _repository.HomeworkDescriptionRepository.GetById(model.HomeworkDescriptionID).Name;
+                var reflectionValidationFileName = _repository.HomeworkDescriptionRepository.GetById(model.HomeworkDescriptionID).ReflectionFile;
+
+                //studentd's homework folder
+                var studentsHomeworkFolder = Path.Combine(Config.BasePathToCodeFiles, model.GetHomeworkDirectory());
+                var teachersHomeworkFolder = Path.Combine(Config.BasePathToValidationFiles, homeworkDescriptionName);
+
+                var reflectionFile = Path.Combine(Config.BasePathToValidationFiles, homeworkDescriptionName, reflectionValidationFileName);
 
                 try
                 {
-                    ProcessFileUpload(model.CsProject, Config.BasePathToCodeFiles);
+                    HomeworkHelper.InitFolder(studentsHomeworkFolder, teachersHomeworkFolder);
+                    await ProcessZipUpload(model.CsProject, studentsHomeworkFolder);
+
+                    //compile and execute and then save data to DB
+                    Evaluation eval = await EvaluatorTaskFactory.CreateAndStart(studentsHomeworkFolder, model.CsProject.FileName, reflectionFile);
+
+                    model.EvaluationResult = eval.EvaluationResult;
+                    TempData["evaluation"] = JsonConvert.SerializeObject(eval);
+
+                    //returns HomeworkID
+                    var homeworkID = _repository.HomeworkRepository.Add(model);
+
+                    return RedirectToAction("Results", new { HomeworkID = homeworkID, model.StudentID });
                 }
                 catch (Exception)
                 {
                     return RedirectToAction("Error");
                 }
 
-
-                //get validation files
-                var homeworkDescriptionName = _repository.HomeworkDescriptionRepository.GetById(model.HomeworkDescriptionID).Name;
-                var reflectionValidationFile = _repository.HomeworkDescriptionRepository.GetById(model.HomeworkDescriptionID).ReflectionFile;
-
-                var reflectionFolder = Path.Combine(Config.BasePathToValidationFiles, homeworkDescriptionName);
-                var reflectionFile = Path.Combine(reflectionFolder, reflectionValidationFile);
-
-                //compile and execute and then save data to DB
-                Evaluation eval = TaskFactory.CreateAndStart(model.CsProject.FileName, reflectionFile).Result;
-
-                model.EvaluationResult = eval.EvaluationResult;
-                TempData["evaluation"] = JsonConvert.SerializeObject(eval);
-
-                //returns HomeworkID
-                var homeworkID = _repository.HomeworkRepository.Add(model);
-
-                return RedirectToAction("Results", new { HomeworkID = homeworkID, model.StudentID });
             }
 
             return RedirectToAction("PAW");
@@ -165,7 +182,7 @@ namespace CsEvaluator.Controllers
 
         [HttpPost]
         [ExportModelState]
-        public IActionResult PAWAdmin(HomeworkDescriptionViewModel model, IList<IFormFile> files)
+        public async Task<IActionResult> PAWAdmin(HomeworkDescriptionViewModel model, IList<IFormFile> files)
         {
             if (ModelState.IsValid)
             {
@@ -177,8 +194,9 @@ namespace CsEvaluator.Controllers
 
                 try
                 {
-                    ProcessFileUpload(model.ReflectionFile, fullValidationFolder);
-                    ProcessFileUpload(model.UnitTestFile, fullValidationFolder);
+                    await ProcessFileUpload(model.ReflectionFile, fullValidationFolder);
+                    await ProcessFileUpload(model.UnitTestFile, fullValidationFolder);
+                    await ProcessFileUpload(model.NunitDllFile, fullValidationFolder);
                 }
                 catch (Exception)
                 {

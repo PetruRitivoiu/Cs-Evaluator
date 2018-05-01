@@ -22,5 +22,10 @@ namespace CsEvaluator.Data.ViewModels
 
         public IEnumerable<HomeworkDescriptionPreviewModel> HomeworkDescriptions { get; set; }
 
+        public string GetHomeworkDirectory()
+        {
+            return $"student_{StudentID}_homework_{HomeworkDescriptionID}";
+        }
+
     }
 }

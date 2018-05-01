@@ -43,7 +43,15 @@
 
     <div class="form-group-sm">
         <label for="unit-test-file-input" class="custom-file-upload">Unit Tests File input</label>
-        <input id="unit-test-file-input" accept=".cs,.java" type="file" asp-for="UnitTestFile">
+        <input id="unit-test-file-input" accept=".cs" type="file" asp-for="UnitTestFile">
+        <span asp-validation-for="UnitTestFile" class="text-danger"></span>
+    </div>
+
+    <br />
+
+    <div class="form-group-sm">
+        <label for="nunit-dll-file-input" class="custom-file-upload">Unit Tests File input</label>
+        <input id="nunit-dll-file-input" accept=".dll" type="file" asp-for="NunitDllFile">
         <span asp-validation-for="UnitTestFile" class="text-danger"></span>
     </div>
 

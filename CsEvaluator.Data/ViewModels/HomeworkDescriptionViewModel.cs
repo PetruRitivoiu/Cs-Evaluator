@@ -23,5 +23,9 @@ namespace CsEvaluator.Data.ViewModels
         [Required]
         [Display(Name = "Unit tests file")]
         public IFormFile UnitTestFile { get; set; }
+
+        [Required]
+        [Display(Name = "NUnit dll file file")]
+        public IFormFile NunitDllFile { get; set; }
     }
 }

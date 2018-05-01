@@ -14,17 +14,15 @@ namespace CsEvaluator.Engine
         public PAWEvaluator()
         {
             Directory.CreateDirectory(Config.BasePathToCodeFiles);
-            Directory.CreateDirectory(Config.BasePathToDllFiles);
             Directory.CreateDirectory(Config.BasePathToValidationFiles);
         }
 
-        public Evaluation Evaluate(string shortFileName, string fullReflectionFile)
+        public Evaluation Evaluate(string workingDirectory, string shortFileName, string fullReflectionFile)
         {
-            var csFileFullName = Path.Combine(Config.BasePathToCodeFiles, shortFileName);
-            var dllFileFullName = Path.Combine(Config.BasePathToDllFiles, shortFileName);
+            var dllFileFullName = Path.Combine(workingDirectory, shortFileName);
             dllFileFullName = UtilHelper.ChangeVirtualExtension(dllFileFullName, ".dll");
 
-            var buildInfo = BuildAndScan(csFileFullName, dllFileFullName);
+            var buildInfo = BuildAndScan(workingDirectory, dllFileFullName);
 
             if (!buildInfo.Succes)
             {
@@ -64,9 +62,9 @@ namespace CsEvaluator.Engine
             return new Evaluation(studentsMark, rulesEvaluation);
         }
 
-        private BuildInfo BuildAndScan(string csFileFullName, string dllFileFullName)
+        private BuildInfo BuildAndScan(string workingDirectory, string dllFileFullName)
         {
-            var process = ProcessFactory.BuildAndScanProcess($"\"{csFileFullName}\" \"{dllFileFullName}\"");
+            var process = ProcessFactory.BuildAndScanProcess(workingDirectory, dllFileFullName);
 
             try
             {
@@ -75,6 +73,11 @@ namespace CsEvaluator.Engine
                 string output = process.StandardOutput.ReadToEnd();
 
                 process.WaitForExit();
+
+                if (process.ExitCode != 0)
+                {
+                    return new BuildInfo(false, "Exit code not 0");
+                }
 
                 if (string.IsNullOrEmpty(output))
                 {
@@ -96,7 +99,7 @@ namespace CsEvaluator.Engine
 
         private bool ScanForViruses(string shortFileName)
         {
-            var files = Directory.EnumerateFiles(Config.BasePathToDllFiles, $"{shortFileName}.*", SearchOption.AllDirectories)
+            var files = Directory.EnumerateFiles(Config.BasePathToCodeFiles, $"{shortFileName}.*", SearchOption.AllDirectories)
             .Where(s => s.EndsWith(".dll") || s.EndsWith(".vir"));
 
             var file = new FileInfo(files.FirstOrDefault());

@@ -17,5 +17,19 @@ namespace CsEvaluator.Engine.Util
 
             return process;
         }
+
+        public static Process RunUnitTests(string workingDirectory, string args)
+        {
+            var process = new Process();
+            process.StartInfo.WorkingDirectory = workingDirectory;
+            process.StartInfo.FileName = Config.PathToUnitTestingScript;
+            process.StartInfo.Arguments = $" \"{args}\" ";
+            process.StartInfo.CreateNoWindow = true;
+            process.StartInfo.UseShellExecute = false;
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.RedirectStandardError = true;
+
+            return process;
+        }
     }
 }

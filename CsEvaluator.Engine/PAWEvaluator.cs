@@ -46,7 +46,7 @@ namespace CsEvaluator.Engine
 
             //----functional evaluation -----//
 
-            var functionalEvaluation = RunFunctionalEvaluation(assembly, fullUnitTestingFile);
+            var functionalEvaluation = RunFunctionalEvaluation(assembly, workingDirectory, dllFileFullName);
 
             return new Evaluation(staticEvaluation, functionalEvaluation);
         }
@@ -70,8 +70,36 @@ namespace CsEvaluator.Engine
             return new StaticEvaluation(studentsMark, rulesEvaluation);
         }
 
-        private FunctionalEvaluation RunFunctionalEvaluation(Assembly assembly, string fullUnitTestingFile)
+        private FunctionalEvaluation RunFunctionalEvaluation(Assembly assembly, string workingDirectory, string fullUnitTestingFile)
         {
+            var process = ProcessFactory.RunUnitTests(workingDirectory, fullUnitTestingFile);
+
+            try
+            {
+                process.Start();
+                string output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                if (process.ExitCode != 0)
+                {
+                    //to-do
+                }
+
+                if (string.IsNullOrEmpty(output))
+                {
+                    //to-do
+                }
+                else
+                {
+                    //to-do
+                }
+
+            }
+            catch(Exception ex)
+            {
+                //to-do
+            }
+
             return null;
         }
 

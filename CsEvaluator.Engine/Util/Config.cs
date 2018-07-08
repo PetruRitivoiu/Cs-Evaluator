@@ -10,5 +10,8 @@
 
         public const string PathToBuildAndScanScript =
             @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\CsEvaluator.Engine\BuildAndScan.bat";
+
+        public const string PathToUnitTestingScript =
+            @"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\CsEvaluator.Engine\UnitTesting.bat";
     }
 }

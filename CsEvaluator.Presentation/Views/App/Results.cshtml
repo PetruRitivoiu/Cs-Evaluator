@@ -15,6 +15,7 @@
 
     <hr />
     <h4> Static analysis results </h4>
+    <hr />
     @if (string.IsNullOrWhiteSpace(Model.Evaluation.Error))
     {
         @foreach (var ruleEvaluation in Model.Evaluation.StaticEvaluation.RulesEvaluation)

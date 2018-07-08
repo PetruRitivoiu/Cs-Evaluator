@@ -10,6 +10,7 @@
         Enum,
         Event,
         Field,
+        Indexer,
         Interface,
         OperatorOverload,
         Property,

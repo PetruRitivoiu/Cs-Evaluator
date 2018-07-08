@@ -43,6 +43,10 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
                 case ComplementType.Field:
                     actualCount = CheckAll(types, ByField);
                     break;
+
+                case ComplementType.Indexer:
+                    actualCount = CheckAll(types, ByIndexer);
+                    break;
             }
 
             if (actualCount >= Count)
@@ -249,6 +253,27 @@ namespace CsEvaluator.Engine.ReflectionEvaluator.Rules
                     count = 0;
                     //log error
                     break;
+            }
+
+            return count;
+        }
+
+        private int ByIndexer(Type t)
+        {
+            int count = 0;
+
+            foreach (PropertyInfo pi in t.GetProperties())
+            {
+                if (pi.GetIndexParameters().Length > 0)
+                {
+                    var desiredParameters = ComplementValue.Split(',');
+                    var actualParameters = pi.GetIndexParameters().ToList().Select(p => p.ParameterType.FullName).ToArray();
+
+                    if (desiredParameters.SequenceEqual(actualParameters))
+                    {
+                        count++;
+                    }
+                }
             }
 
             return count;

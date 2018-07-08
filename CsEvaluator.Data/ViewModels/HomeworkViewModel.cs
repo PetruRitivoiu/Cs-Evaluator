@@ -16,7 +16,17 @@ namespace CsEvaluator.Data.ViewModels
         [Required]
         public int HomeworkDescriptionID { get; set; }
 
-        public double EvaluationResult { get; set; } = -1;
+        public double StaticEvaluationResult { get; set; } = -1;
+
+        public double FunctionalEvaluationResult { get; set; } = -1;
+
+        public double EvaluationResult
+        {
+            get
+            {
+                return (StaticEvaluationResult + FunctionalEvaluationResult) / 2;
+            }
+        }
 
         public IEnumerable<StudentPreviewModel> Students { get; set; }
 

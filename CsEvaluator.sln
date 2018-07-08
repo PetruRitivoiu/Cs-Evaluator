@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsEvaluator", "Cs-Evaluator\CsEvaluator.csproj", "{B3843A08-FC75-42E9-82FD-2428A079A881}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsEvaluator.Presentation", "CsEvaluator.Presentation\CsEvaluator.Presentation.csproj", "{B3843A08-FC75-42E9-82FD-2428A079A881}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsEvaluator.Data", "CsEvaluator.Data\CsEvaluator.Data.csproj", "{62EA4B0C-9C4F-48F0-A11A-059EFA1AF323}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsEvaluator.Data", "CsEvaluator.Data\CsEvaluator.Data.csproj", "{62EA4B0C-9C4F-48F0-A11A-059EFA1AF323}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsEvaluator.Repository", "CsEvaluator.Repository\CsEvaluator.Repository.csproj", "{0495E138-82B8-44C3-AC46-849710F37FA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsEvaluator.Repository", "CsEvaluator.Repository\CsEvaluator.Repository.csproj", "{0495E138-82B8-44C3-AC46-849710F37FA4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsEvaluator.Database", "CsEvaluator.Database\CsEvaluator.Database.csproj", "{1DB2E15F-2529-4B58-82B8-5E9A1F179E3B}"
 EndProject

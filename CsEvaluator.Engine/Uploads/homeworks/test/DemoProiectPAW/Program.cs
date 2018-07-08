@@ -54,22 +54,10 @@ namespace DemoProiectPAW
             }
         }
 
-        public int this[int i]
-        {
-            get { return vector[i]; }
-        }
-
         public Class1(int prop1, int prop2)
         {
             this._prop1 = prop1;
             this._prop2 = prop2;
-
-            vector = new int[1024];
-
-            for (int i = 0; i < 1024; i++)
-            {
-                vector[i] = i;
-            }
         }
 
         public object Clone()

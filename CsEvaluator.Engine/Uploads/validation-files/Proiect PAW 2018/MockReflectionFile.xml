@@ -172,10 +172,10 @@
       HAS
     </verb>
     <complement-type>
-      OperatorOverload
+      Indexer
     </complement-type>
     <complement-value>
-      []
+      System.Int32
     </complement-value>
     <count>
       1

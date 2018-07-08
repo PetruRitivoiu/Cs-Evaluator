@@ -1,0 +1,7 @@
+c:\users\thinkpad-e560\documents\visual studio 2017\Projects\DemoProiectPAW\DemoProiectPAW\bin\Debug\DemoProiectPAW.exe.config
+c:\users\thinkpad-e560\documents\visual studio 2017\Projects\DemoProiectPAW\DemoProiectPAW\bin\Debug\DemoProiectPAW.exe
+c:\users\thinkpad-e560\documents\visual studio 2017\Projects\DemoProiectPAW\DemoProiectPAW\bin\Debug\DemoProiectPAW.pdb
+c:\users\thinkpad-e560\documents\visual studio 2017\Projects\DemoProiectPAW\DemoProiectPAW\obj\Debug\DemoProiectPAW.csprojResolveAssemblyReference.cache
+c:\users\thinkpad-e560\documents\visual studio 2017\Projects\DemoProiectPAW\DemoProiectPAW\obj\Debug\DemoProiectPAW.csproj.CoreCompileInputs.cache
+c:\users\thinkpad-e560\documents\visual studio 2017\Projects\DemoProiectPAW\DemoProiectPAW\obj\Debug\DemoProiectPAW.exe
+c:\users\thinkpad-e560\documents\visual studio 2017\Projects\DemoProiectPAW\DemoProiectPAW\obj\Debug\DemoProiectPAW.pdb

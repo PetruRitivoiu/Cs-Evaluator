@@ -5,7 +5,10 @@ using System.IO;
 using CsEvaluator.Engine.Util;
 using CsEvaluator.Engine.FileParser;
 using CsEvaluator.Engine.ReflectionEvaluator.Rules;
+using CsEvaluator.Engine.Common;
 using System.Collections.Generic;
+using System.Runtime.Loader;
+using System.Xml.Linq;
 
 namespace CsEvaluator.Engine
 {
@@ -17,12 +20,12 @@ namespace CsEvaluator.Engine
             Directory.CreateDirectory(Config.BasePathToValidationFiles);
         }
 
-        public Evaluation Evaluate(string workingDirectory, string shortFileName, string fullReflectionFile)
+        public Evaluation Evaluate(string workingDirectory, string shortFileName, string fullReflectionFile, string fullUnitTestingFile)
         {
             var dllFileFullName = Path.Combine(workingDirectory, shortFileName);
             dllFileFullName = UtilHelper.ChangeVirtualExtension(dllFileFullName, ".dll");
 
-            var buildInfo = BuildAndScan(workingDirectory, dllFileFullName);
+            var buildInfo = BuildAndScan(workingDirectory, dllFileFullName, fullUnitTestingFile);
 
             if (!buildInfo.Succes)
             {
@@ -34,16 +37,21 @@ namespace CsEvaluator.Engine
                 return new Evaluation("dll file contains viruses");
             }
 
-            var assembly = Assembly.LoadFile(dllFileFullName);
+            byte[] assemblyBytes = File.ReadAllBytes(dllFileFullName);
+            var assembly = Assembly.Load(assemblyBytes);
 
-            //----reflection evaluation -----//
+            //----static evaluation -----//
 
-            Evaluation evaluation = ReflectionEvaluation(assembly, fullReflectionFile);
+            var staticEvaluation = RunStaticEvaluation(assembly, fullReflectionFile);
 
-            return evaluation;
+            //----functional evaluation -----//
+
+            var functionalEvaluation = RunFunctionalEvaluation(assembly, fullUnitTestingFile);
+
+            return new Evaluation(staticEvaluation, functionalEvaluation);
         }
 
-        private Evaluation ReflectionEvaluation(Assembly assembly, string fullReflectionFile)
+        private StaticEvaluation RunStaticEvaluation(Assembly assembly, string fullReflectionFile)
         {
             IParser xmlParser = new XmlParser();
             var rulesList = xmlParser.ParseToList(fullReflectionFile);
@@ -59,11 +67,36 @@ namespace CsEvaluator.Engine
 
             double studentsMark = (double)counter / rulesList.Count() * 10;
 
-            return new Evaluation(studentsMark, rulesEvaluation);
+            return new StaticEvaluation(studentsMark, rulesEvaluation);
         }
 
-        private BuildInfo BuildAndScan(string workingDirectory, string dllFileFullName)
+        private FunctionalEvaluation RunFunctionalEvaluation(Assembly assembly, string fullUnitTestingFile)
         {
+            return null;
+        }
+
+        private BuildInfo BuildAndScan(string workingDirectory, string dllFileFullName, string unitTestingFileFullName)
+        {
+            //Add unit testing file to .csproj file
+            var csProjPath = Directory.GetFiles(workingDirectory, "*.csproj").FirstOrDefault();
+            var shortTestFileName = unitTestingFileFullName.Split('\\').Last();
+
+            var doc = XDocument.Load(csProjPath);
+            var ns = doc.Root.GetDefaultNamespace();
+
+            var element = new XElement(ns + "Compile", new XAttribute("Include", shortTestFileName));
+
+            if (doc.Root.Descendants().Any(d => d.Name.LocalName == "Compile" && d.Attribute("Include") != null))
+            {
+                if (!doc.Root.Descendants().Any(d => d.Name.LocalName == "Compile" && d.Attribute("Include").Value == shortTestFileName))
+                {
+                    doc.Root.Descendants().Where(d => d.Name.LocalName == "Compile" && d.Attribute("Include") != null).FirstOrDefault().Parent.Add(element);
+                }
+            }
+
+            doc.Save(csProjPath);
+
+            //Build the assembly
             var process = ProcessFactory.BuildAndScanProcess(workingDirectory, dllFileFullName);
 
             try

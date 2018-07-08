@@ -3,7 +3,7 @@
     @model CsEvaluator.Data.ViewModels.HomeworkDescriptionViewModel;
 }
 
-<h2>@ViewData["Title"].</h2>
+<h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
 
 <hr />
@@ -50,9 +50,9 @@
     <br />
 
     <div class="form-group-sm">
-        <label for="nunit-dll-file-input" class="custom-file-upload">Unit Tests File input</label>
+        <label for="nunit-dll-file-input" class="custom-file-upload">Nunit Dll File</label>
         <input id="nunit-dll-file-input" accept=".dll" type="file" asp-for="NunitDllFile">
-        <span asp-validation-for="UnitTestFile" class="text-danger"></span>
+        <span asp-validation-for="NunitDllFile" class="text-danger"></span>
     </div>
 
     <br />

@@ -1,8 +1,7 @@
-﻿using CsEvaluator.Engine;
-using CsEvaluator.Engine.FileParser;
+﻿using CsEvaluator.Engine.FileParser;
 using CsEvaluator.Engine.ReflectionEvaluator.Rules;
 using NUnit.Framework;
-using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace CsEvaluator.Engine.Tests
@@ -19,7 +18,7 @@ namespace CsEvaluator.Engine.Tests
             Assert.AreEqual(expected, rules.Count);
         }
 
-        [TestCase(8)]
+        [TestCase(9)]
         public void TestReflectionValidation(int expected)
         {
             var xmlParser = new XmlParser();
@@ -28,12 +27,22 @@ namespace CsEvaluator.Engine.Tests
                 xmlParser.ParseToList(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\CsEvaluator.Engine.Tests\MockData\MockReflectionFile.xml");
 
             var assembly =
-                Assembly.LoadFrom(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\CsEvaluator.Engine.Tests\MockData\MockProiect.exe");
+                Assembly.LoadFrom(@"C:\Users\thinkpad-e560\Documents\Visual Studio 2017\Projects\cs-evaluator\CsEvaluator.Engine.Tests\MockData\DemoProiectPAW.exe");
 
             int count = 0;
+            var failedRules = new List<RuleEvaluation>();
             foreach (Rule rule in list)
             {
-                count += rule.Evaluate(assembly).HasPassed == true ? 1 : 0;
+                var ruleEval = rule.Evaluate(assembly);
+
+                if (ruleEval.HasPassed)
+                {
+                    count++;
+                }
+                else
+                {
+                    failedRules.Add(ruleEval);
+                }
             }
 
             Assert.AreEqual(expected, count);

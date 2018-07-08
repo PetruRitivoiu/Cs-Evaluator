@@ -39,7 +39,9 @@ namespace CsEvaluator.Database.SqlHelper
             {
                 new HomeworkDescriptionEntity{Subject=subjects[0], Name="Proiect PAW 2018", ShortDescription="Proiect PAW 2018",
                     FullDescription = "Cerinta proiectului poate fi gasita la adresa http://acs.ase.ro/paw",
-                    ReflectionFile = "MockReflectionFile.xml"}
+                    ReflectionFile = "MockReflectionFile.xml",
+                    UnitTestsFile = "MockUnitTestingFile.cs"
+                }
             };
 
             var studentSubjectRelationship = new StudentSubjectRelationship[]

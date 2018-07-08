@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
+using DemoProiectPAW;
 
-namespace DemoProiectPAW
+namespace DemoTestNamespace
 {
     [TestFixture]
     public class MockUnitTestingFile

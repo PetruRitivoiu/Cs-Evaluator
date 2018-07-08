@@ -14,6 +14,7 @@ using CsEvaluator.ModelState;
 using CsEvaluator.Repository.Interfaces;
 using CsEvaluator.Engine;
 using CsEvaluator.Engine.Util;
+using CsEvaluator.Engine.Common;
 using Newtonsoft.Json;
 using System.Threading.Tasks;
 using System.IO.Compression;
@@ -78,7 +79,7 @@ namespace CsEvaluator.Controllers.Web
                 filename = ContentDispositionHeaderValue
                     .Parse(file.ContentDisposition)
                     .FileName
-                    .ToString();
+                    .Value;
 
                 filename = Path.Combine(basePath, file.FileName);
                 using (FileStream fs = System.IO.File.Create(filename))
@@ -103,7 +104,23 @@ namespace CsEvaluator.Controllers.Web
 
             ZipFile.ExtractToDirectory(zipFile, basePath, true);
 
+            foreach (var dir in Directory.GetDirectories(basePath))
+            {
+                CopyFilesFromDir(dir, basePath, true);
+            }
+
             return true;
+        }
+
+        private void CopyFilesFromDir(string sourceDir, string targetDir, bool overwrite)
+        {
+            Directory.CreateDirectory(targetDir);
+
+            foreach (var file in Directory.GetFiles(sourceDir))
+                System.IO.File.Copy(file, Path.Combine(targetDir, Path.GetFileName(file)), true);
+
+            foreach (var directory in Directory.GetDirectories(sourceDir))
+                CopyFilesFromDir(directory, Path.Combine(targetDir, Path.GetFileName(directory)), true);
         }
 
         //Controller methods
@@ -122,7 +139,9 @@ namespace CsEvaluator.Controllers.Web
 
             ViewData["Message"] = "Aici se vor incarca temele pentru disciplina Programarea Aplicatiilor Windows (PAW)";
 
-            ViewData["Details"] = "Se va incarca o arhiva .zip cu fisierele .cs ale solutiei + dll-urile nuget-urilor folosite (daca este cazul)";
+            ViewData["Details"] = "Se va incarca arhiva .zip cu proiectul dvs. C#. Arhiva trebuie sa contina fisierul .sln " +
+                "in primul rand de copii al arborelui de fisiere si sa contina folderul packages in cazul in care" +
+                "ati folosit nuget-uri third-party.";
 
             return View(model);
         }
@@ -136,15 +155,18 @@ namespace CsEvaluator.Controllers.Web
                 model = WrapStudentsData(model);
                 model = WrapHomeworkDescriptionData(model);
 
-                //get validation files
+                //get homework info
                 var homeworkDescriptionName = _repository.HomeworkDescriptionRepository.GetById(model.HomeworkDescriptionID).Name;
                 var reflectionValidationFileName = _repository.HomeworkDescriptionRepository.GetById(model.HomeworkDescriptionID).ReflectionFile;
+                var unitTestingFileName = _repository.HomeworkDescriptionRepository.GetById(model.HomeworkDescriptionID).UnitTestsFile;
 
-                //studentd's homework folder
+                //student's homework folder
                 var studentsHomeworkFolder = Path.Combine(Config.BasePathToCodeFiles, model.GetHomeworkDirectory());
                 var teachersHomeworkFolder = Path.Combine(Config.BasePathToValidationFiles, homeworkDescriptionName);
 
+                //get validation files
                 var reflectionFile = Path.Combine(Config.BasePathToValidationFiles, homeworkDescriptionName, reflectionValidationFileName);
+                var unitTestingFile = Path.Combine(Config.BasePathToValidationFiles, homeworkDescriptionName, unitTestingFileName);
 
                 try
                 {
@@ -152,9 +174,10 @@ namespace CsEvaluator.Controllers.Web
                     await ProcessZipUpload(model.CsProject, studentsHomeworkFolder);
 
                     //compile and execute and then save data to DB
-                    Evaluation eval = await EvaluatorTaskFactory.CreateAndStart(studentsHomeworkFolder, model.CsProject.FileName, reflectionFile);
+                    Evaluation eval = await EvaluatorTaskFactory.CreateAndStart(studentsHomeworkFolder, model.CsProject.FileName, reflectionFile, unitTestingFile);
 
-                    model.EvaluationResult = eval.EvaluationResult;
+                    model.StaticEvaluationResult = eval.StaticEvaluation.EvaluationResult;
+                    //TO-DO functionalEvaluationResult !!
                     TempData["evaluation"] = JsonConvert.SerializeObject(eval);
 
                     //returns HomeworkID
@@ -162,7 +185,7 @@ namespace CsEvaluator.Controllers.Web
 
                     return RedirectToAction("Results", new { HomeworkID = homeworkID, model.StudentID });
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     return RedirectToAction("Error");
                 }

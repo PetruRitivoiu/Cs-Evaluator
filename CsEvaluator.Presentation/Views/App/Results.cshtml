@@ -14,10 +14,10 @@
     <p>Evaluation result: @Model.Evaluation.EvaluationResult</p>
 
     <hr />
-
+    <h4> Static analysis results </h4>
     @if (string.IsNullOrWhiteSpace(Model.Evaluation.Error))
     {
-        @foreach (var ruleEvaluation in Model.Evaluation.RulesEvaluation)
+        @foreach (var ruleEvaluation in Model.Evaluation.StaticEvaluation.RulesEvaluation)
         {
             <p> Nume regula: <b>@ruleEvaluation.RuleInfo.Description</b></p>
 

@@ -17,28 +17,15 @@ namespace DemoProiectPAW
             Assert.AreEqual("DemoProiectPAW", result);
         }
 
-        [Test]
-        public void TestUrlValid()
+        [TestCase("https://www.google.ro", true)]
+        [TestCase("https://www.asdf1234.xyz", false)]
+        public void TestUrlValid(string url, bool expected)
         {
             var demoTesting = new DemoTesting();
 
-            var url = @"https://www.google.ro/";
-
             var result = demoTesting.IsURLValid(url);
 
-            Assert.AreEqual(true, result);
-        }
-
-        [Test]
-        public void TestUrlInvalid()
-        {
-            var demoTesting = new DemoTesting();
-
-            var url = @"https://www.google123xyz.ro/";
-
-            var result = demoTesting.IsURLValid(url);
-
-            Assert.AreEqual(false, result);
+            Assert.AreEqual(expected, result);
         }
     }
 }

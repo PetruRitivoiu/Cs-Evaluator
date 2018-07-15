@@ -139,9 +139,7 @@ namespace CsEvaluator.Controllers.Web
 
             ViewData["Message"] = "Aici se vor incarca temele pentru disciplina Programarea Aplicatiilor Windows (PAW)";
 
-            ViewData["Details"] = "Se va incarca arhiva .zip cu proiectul dvs. C#. Arhiva trebuie sa contina fisierul .sln " +
-                "in primul rand de copii al arborelui de fisiere si sa contina folderul packages in cazul in care" +
-                "ati folosit nuget-uri third-party.";
+            ViewData["Details"] = "Se va incarca o arhiva .zip cu proiectul C#";
 
             return View(model);
         }
@@ -174,10 +172,11 @@ namespace CsEvaluator.Controllers.Web
                     await ProcessZipUpload(model.CsProject, studentsHomeworkFolder);
 
                     //compile and execute and then save data to DB
-                    Evaluation eval = await EvaluatorTaskFactory.CreateAndStart(studentsHomeworkFolder, model.CsProject.FileName, reflectionFile, unitTestingFile);
+                    Evaluation eval = await EvaluatorTaskFactory
+                        .CreateAndStart(new EvaluationTask(studentsHomeworkFolder, model.CsProject.FileName, reflectionFile, unitTestingFile));
 
                     model.StaticEvaluationResult = eval.StaticEvaluation.EvaluationResult;
-                    //TO-DO functionalEvaluationResult !!
+                    model.FunctionalEvaluationResult = eval.FunctionalEvaluation.EvaluationResult;
                     TempData["evaluation"] = JsonConvert.SerializeObject(eval);
 
                     //returns HomeworkID

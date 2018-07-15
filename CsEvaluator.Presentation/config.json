@@ -1,5 +1,6 @@
 ﻿{
   "ConnectionStrings": {
-    "CsEvaluator" : "Server=(localdb)\\MSSQLLocalDb;Database=CsEvaluatorDatabase;Trusted_Connection=true;MultipleActiveResultSets=true"
-  }
+    "CsEvaluator": "Server=(localdb)\\MSSQLLocalDb;Database=CsEvaluatorDatabase;Trusted_Connection=true;MultipleActiveResultSets=true"
+  },
+  "number-of-processors": "4"
 }

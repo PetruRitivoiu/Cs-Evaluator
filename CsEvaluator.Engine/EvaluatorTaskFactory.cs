@@ -1,20 +1,51 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Configuration;
+using System.Threading;
 using System.Threading.Tasks;
 using CsEvaluator.Engine.Common;
 
 namespace CsEvaluator.Engine
 {
-    public class EvaluatorTaskFactory
+    public static class EvaluatorTaskFactory
     {
-        public static int TaskCounter = 0;
+        public static readonly TimeSpan MaxWait;
 
-        public static Task<Evaluation> CreateAndStart(string workingDirectory, string shortFileName, string reflectionFile, string unitTestingFile)
+        private static int TaskCounter;
+
+        private static int NumberOfProcessors;
+
+        private static ConcurrentQueue<EvaluationTask> TaskQueue;
+
+        private static AutoResetEvent ReadyToDeque;
+
+        static EvaluatorTaskFactory()
         {
+            MaxWait = TimeSpan.FromMilliseconds(5000);
+            TaskCounter = 0;
+            NumberOfProcessors = 4;
+            TaskQueue = new ConcurrentQueue<EvaluationTask>();
+            ReadyToDeque = new AutoResetEvent(false);
+        }
+
+        public static Task<Evaluation> CreateAndStart(EvaluationTask evaluationTask)
+        {
+            if (Thread.VolatileRead(ref TaskCounter) >= NumberOfProcessors)
+            {
+                TaskQueue.Enqueue(evaluationTask);
+                ReadyToDeque.WaitOne(MaxWait);
+            }
+
             Interlocked.Increment(ref TaskCounter);
 
             var pawEvaluator = new PAWEvaluator();
 
-            Task<Evaluation> T = new Task<Evaluation>(() => pawEvaluator.Evaluate(workingDirectory, shortFileName, reflectionFile, unitTestingFile));
+            Task<Evaluation> T = new Task<Evaluation>(() => pawEvaluator.Evaluate(
+                            evaluationTask.WorkingDirectory,
+                            evaluationTask.ShortFileName,
+                            evaluationTask.ReflectionFile,
+                            evaluationTask.UnitTestingFile));
+
 
             T.ContinueWith((evaluation) => UpdateResults(evaluation));
 
@@ -26,6 +57,11 @@ namespace CsEvaluator.Engine
         private static int UpdateResults(Task<Evaluation> evaluation)
         {
             Interlocked.Decrement(ref TaskCounter);
+
+            if (TaskCounter < NumberOfProcessors)
+            {
+                ReadyToDeque.Set();
+            }
 
             return TaskCounter;
         }

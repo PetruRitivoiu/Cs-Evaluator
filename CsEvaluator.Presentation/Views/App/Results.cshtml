@@ -11,11 +11,20 @@
     <p>Subject: @Model.SubjectName</p>
     <p>Homework: @Model.HomeworkName</p>
     <p>Homework description: @Model.HomeworkDescription</p>
-    <p>Evaluation result: @Model.Evaluation.EvaluationResult</p>
+    <p>Overall Evaluation result: @Model.Evaluation.EvaluationResult</p>
+
+    <hr />
+    <h4> Functional analysis results </h4>
+    <p> Evaluation Result: @Model.Evaluation.FunctionalEvaluation.EvaluationResult </p>
+
+    <p> Total tests run: @Model.Evaluation.FunctionalEvaluation.Total </p>
+    <p> Passed tests: @Model.Evaluation.FunctionalEvaluation.Passed </p>
+    <p> Failed tests: @Model.Evaluation.FunctionalEvaluation.Failed </p>
 
     <hr />
     <h4> Static analysis results </h4>
-    <hr />
+    <p> Evaluation Result: @Model.Evaluation.StaticEvaluation.EvaluationResult </p>
+
     @if (string.IsNullOrWhiteSpace(Model.Evaluation.Error))
     {
         @foreach (var ruleEvaluation in Model.Evaluation.StaticEvaluation.RulesEvaluation)

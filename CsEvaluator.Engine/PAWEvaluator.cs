@@ -80,24 +80,38 @@ namespace CsEvaluator.Engine
                 string output = process.StandardOutput.ReadToEnd();
                 process.WaitForExit();
 
-                if (process.ExitCode != 0)
+                if (process.ExitCode != 0 && process.ExitCode != 1)
                 {
-                    //to-do
+                    //log error
+                    //this is no good..
                 }
 
                 if (string.IsNullOrEmpty(output))
                 {
-                    //to-do
+                    //log error
+                    //again this is no good
                 }
                 else
                 {
-                    //to-do
+                    var files = Directory.GetFiles(workingDirectory, "TestResult.xml", SearchOption.AllDirectories);
+                    var doc = XDocument.Load(files[0]);
+
+                    int total = int.Parse(doc.Root.Attribute("total").Value);
+                    int passed = int.Parse(doc.Root.Attribute("passed").Value);
+                    int failed = int.Parse(doc.Root.Attribute("failed").Value);
+
+                    return new FunctionalEvaluation() {
+                        Total = total,
+                        Passed = passed,
+                        Failed = failed,
+                        EvaluationResult = (double)passed / total * 10
+                    };
                 }
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                //to-do
+                //log error
             }
 
             return null;

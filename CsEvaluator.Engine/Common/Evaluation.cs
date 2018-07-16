@@ -15,7 +15,6 @@ namespace CsEvaluator.Engine.Common
 
         public Evaluation(string error)
         {
-            EvaluationResult = -1;
             Error = error;
         }
 
@@ -33,10 +32,6 @@ namespace CsEvaluator.Engine.Common
                 }
 
                 return (StaticEvaluation.EvaluationResult + FunctionalEvaluation.EvaluationResult) / 2;
-            }
-            private set
-            {
-                EvaluationResult = value;
             }
         }
 

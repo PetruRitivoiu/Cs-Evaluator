@@ -3,8 +3,10 @@
     @model CsEvaluator.Data.ViewModels.ResultViewModel
 }
 
-<h2>@ViewData["Title"].</h2>
+<h2>@ViewData["Title"]</h2>
 <h3>@ViewData["Message"]</h3>
+
+<br />
 
 <div class="container">
     <p>Student: @Model.StudentName</p>
@@ -24,16 +26,17 @@
     <hr />
     <h4> Static analysis results </h4>
     <p> Evaluation Result: @Model.Evaluation.StaticEvaluation.EvaluationResult </p>
+    <br />
 
     @if (string.IsNullOrWhiteSpace(Model.Evaluation.Error))
     {
         @foreach (var ruleEvaluation in Model.Evaluation.StaticEvaluation.RulesEvaluation)
         {
-            <p> Nume regula: <b>@ruleEvaluation.RuleInfo.Description</b></p>
+            <p> Rule name: <b>@ruleEvaluation.RuleInfo.Description</b></p>
 
-            <p>Rezultat evaluare: <b>@ruleEvaluation.HasPassed</b></p>
+            <p> Evaluation result: <b>@ruleEvaluation.HasPassed</b></p>
 
-            <p>Informatii aditionale: <b>@ruleEvaluation.Reason</b></p>
+            <p> Additional information: <b>@ruleEvaluation.Reason</b></p>
             <hr />
         }
     }

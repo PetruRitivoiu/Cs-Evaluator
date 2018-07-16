@@ -34,6 +34,9 @@ namespace CsEvaluator.Engine
             {
                 TaskQueue.Enqueue(evaluationTask);
                 ReadyToDeque.WaitOne(MaxWait);
+
+                TaskQueue.TryDequeue(out evaluationTask);
+                //preia EvaluationTask-ul din eveniment
             }
 
             Interlocked.Increment(ref TaskCounter);

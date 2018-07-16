@@ -137,6 +137,8 @@ namespace CsEvaluator.Controllers.Web
 
             model = WrapHomeworkDescriptionData(model);
 
+            ViewData["Title"] = "Programarea Aplicatiilor Windows";
+
             ViewData["Message"] = "Aici se vor incarca temele pentru disciplina Programarea Aplicatiilor Windows (PAW)";
 
             ViewData["Details"] = "Se va incarca o arhiva .zip cu proiectul C#";
@@ -243,8 +245,6 @@ namespace CsEvaluator.Controllers.Web
 
         public IActionResult Results(int homeworkID, int studentID)
         {
-            ViewData["Message"] = "Rezultatele evaluarii";
-
             HomeworkEntity he = _repository.HomeworkRepository.GetAll()
                 .FirstOrDefault(t => t.ID == homeworkID);
 

@@ -35,6 +35,6 @@ namespace CsEvaluator.Engine.Common
             }
         }
 
-        public string Error { get; }
+        public string Error { get; set; }
     }
 }
